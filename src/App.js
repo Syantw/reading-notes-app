@@ -1,21 +1,31 @@
 import React, { useState } from "react";
 
-const sidebarBg = "#fff";
-const sidebarBorder = "#f0f0f0";
-const mainBg = "#f7f8fa";
-const cardShadow = "0 2px 8px rgba(0,0,0,0.04)";
-const noteColors = ["#e6f3ff", "#fff2e6", "#e6ffe6", "#fff0f0", "#f0e6ff", "#fffacd"];
-const folderColor = "#4a90e2";
+// 优化的阅读笔记主题色彩方案
+const sidebarBg = "#fefefe";
+const sidebarBorder = "#e8e8e8";
+const mainBg = "#f8f9fb";
+const cardShadow = "0 4px 12px rgba(0,0,0,0.06)";
+// 更温暖的阅读笔记色彩
+const noteColors = [
+  "#fff4e6", // 温暖的米色 - 书页色
+  "#f0f8ff", // 浅蓝色 - 清新阅读
+  "#f5fff5", // 浅绿色 - 护眼色
+  "#fdf0f7", // 浅粉色 - 温和感
+  "#fffacd", // 柠檬色 - 重点标记
+];
+const folderColor = "#d4a574"; // 更像书本的棕色
+const accentColor = "#8b4513"; // 书本棕色作为主色调
 
+// 针对阅读笔记的文件夹分类
 const folders = [
-  { abbr: "📚", name: "Reading Lists", emoji: "📚" },
-  { abbr: "📖", name: "Currently Reading", emoji: "📖" },
-  { abbr: "✅", name: "Completed Books", emoji: "✅" },
-  { abbr: "📝", name: "Reading Notes", emoji: "📝" },
-  { abbr: "💡", name: "Insights", emoji: "💡" },
-  { abbr: "🔖", name: "Bookmarks", emoji: "🔖" },
-  { abbr: "🎯", name: "Reading Goals", emoji: "🎯" },
-  { abbr: "📊", name: "Progress", emoji: "📊" },
+  { abbr: "📚", name: "Currently Reading", color: "#ff6b6b" },
+  { abbr: "📖", name: "To Read", color: "#4ecdc4" },
+  { abbr: "📝", name: "Reading Notes", color: "#45b7d1" },
+  { abbr: "💡", name: "Insights", color: "#f9ca24" },
+  { abbr: "📑", name: "Quotes", color: "#f0932b" },
+  { abbr: "🎧", name: "Audiobooks", color: "#eb4d4b" },
+  { abbr: "📺", name: "Documentaries", color: "#6c5ce7" },
+  { abbr: "✍️", name: "Book Reviews", color: "#a29bfe" },
 ];
 
 function Sidebar({ onCreateNote }) {
@@ -25,71 +35,84 @@ function Sidebar({ onCreateNote }) {
         width: 280,
         background: sidebarBg,
         borderRight: `1px solid ${sidebarBorder}`,
-        padding: "32px 0 24px 0",
+        padding: "24px 0",
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
         boxSizing: "border-box",
       }}
     >
-      <div style={{ padding: "0 32px", marginBottom: 40 }}>
+      {/* 品牌区域 - 突出阅读笔记主题 */}
+      <div style={{ padding: "0 24px", marginBottom: 32 }}>
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            marginBottom: 8,
+            marginBottom: 12,
           }}
         >
           <div
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              marginRight: 12,
+              width: 40,
+              height: 40,
+              borderRadius: "12px",
+              background: "linear-gradient(135deg, #8b4513 0%, #d2691e 100%)",
+              marginRight: 16,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "16px",
+              fontSize: "20px",
             }}
           >
             📚
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: 18, color: "#222" }}>
+            <div style={{ fontWeight: 700, fontSize: 20, color: accentColor }}>
               ReadingNotes
             </div>
-            <div style={{ fontSize: 12, color: "#888" }}>Personal Library</div>
+            <div style={{ fontSize: 13, color: "#666", fontStyle: "italic" }}>
+              Knowledge Keeper
+            </div>
           </div>
         </div>
       </div>
+
       <nav style={{ flex: 1 }}>
-        <div style={{ padding: "0 32px" }}>
+        <div style={{ padding: "0 24px" }}>
+          {/* 创建笔记按钮 */}
           <button
             style={{
               width: "100%",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              background: `linear-gradient(135deg, ${accentColor} 0%, #d2691e 100%)`,
               color: "#fff",
               border: "none",
-              borderRadius: 12,
-              padding: "12px 0",
+              borderRadius: 16,
+              padding: "14px 0",
               fontWeight: 600,
               fontSize: 16,
-              marginBottom: 20,
+              marginBottom: 24,
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: 8,
-              boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
+              gap: 10,
+              boxShadow: "0 4px 12px rgba(139, 69, 19, 0.3)",
               transition: "all 0.2s ease",
             }}
             onClick={onCreateNote}
-            onMouseOver={(e) => e.target.style.transform = "translateY(-1px)"}
-            onMouseOut={(e) => e.target.style.transform = "translateY(0)"}
+            onMouseOver={(e) => {
+              e.target.style.transform = "translateY(-1px)";
+              e.target.style.boxShadow = "0 6px 16px rgba(139, 69, 19, 0.4)";
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = "translateY(0)";
+              e.target.style.boxShadow = "0 4px 12px rgba(139, 69, 19, 0.3)";
+            }}
           >
-            <span>📝</span> New Reading Note
+            <span style={{ fontSize: "18px" }}>📝</span> Add Reading Note
           </button>
+
+          {/* 快捷操作 */}
           <div
             style={{
               display: "flex",
@@ -98,80 +121,87 @@ function Sidebar({ onCreateNote }) {
               marginBottom: 32,
             }}
           >
-            <div 
-              style={{ 
-                color: "#222", 
-                fontWeight: 500, 
-                cursor: "pointer",
-                padding: "8px 12px",
-                borderRadius: 8,
-                transition: "background 0.2s ease",
-              }}
-              onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
-              onMouseOut={(e) => e.target.style.background = "transparent"}
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              color: "#444", 
+              fontWeight: 500, 
+              cursor: "pointer",
+              padding: "8px 12px",
+              borderRadius: 8,
+              transition: "background 0.2s ease"
+            }}
+            onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
+            onMouseOut={(e) => e.target.style.background = "transparent"}
             >
-              🔍 Search Notes
+              <span style={{ marginRight: 12, fontSize: 16 }}>🔍</span>
+              Search Notes
             </div>
-            <div 
-              style={{ 
-                color: "#222", 
-                fontWeight: 500, 
-                cursor: "pointer",
-                padding: "8px 12px",
-                borderRadius: 8,
-                transition: "background 0.2s ease",
-              }}
-              onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
-              onMouseOut={(e) => e.target.style.background = "transparent"}
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              color: "#444", 
+              fontWeight: 500, 
+              cursor: "pointer",
+              padding: "8px 12px",
+              borderRadius: 8,
+              transition: "background 0.2s ease"
+            }}
+            onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
+            onMouseOut={(e) => e.target.style.background = "transparent"}
             >
-              📊 Reading Statistics
+              <span style={{ marginRight: 12, fontSize: 16 }}>📋</span>
+              Reading List
             </div>
-            <div 
-              style={{ 
-                color: "#222", 
-                fontWeight: 500, 
-                cursor: "pointer",
-                padding: "8px 12px",
-                borderRadius: 8,
-                transition: "background 0.2s ease",
-              }}
-              onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
-              onMouseOut={(e) => e.target.style.background = "transparent"}
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              color: "#444", 
+              fontWeight: 500, 
+              cursor: "pointer",
+              padding: "8px 12px",
+              borderRadius: 8,
+              transition: "background 0.2s ease"
+            }}
+            onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
+            onMouseOut={(e) => e.target.style.background = "transparent"}
             >
-              🗄️ Archives
+              <span style={{ marginRight: 12, fontSize: 16 }}>⭐</span>
+              Favorites
             </div>
           </div>
+
+          {/* 分类文件夹 */}
           <div>
             <div
               style={{
                 color: "#888",
                 fontWeight: 600,
                 fontSize: 13,
-                marginBottom: 12,
+                marginBottom: 16,
                 textTransform: "uppercase",
                 letterSpacing: "0.5px",
               }}
             >
-              Reading Categories
+              Categories
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {folders.map((f) => (
+              {folders.map((folder, index) => (
                 <div
-                  key={f.name}
+                  key={index}
                   style={{
-                    color: "#222",
+                    display: "flex",
+                    alignItems: "center",
+                    color: "#444",
                     fontWeight: 500,
                     fontSize: 15,
                     cursor: "pointer",
-                    padding: "8px 12px",
-                    borderRadius: 8,
+                    padding: "10px 12px",
+                    borderRadius: 10,
                     transition: "all 0.2s ease",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
                   }}
                   onMouseOver={(e) => {
-                    e.target.style.background = "#f0f0f0";
+                    e.target.style.background = folder.color + "15";
                     e.target.style.transform = "translateX(4px)";
                   }}
                   onMouseOut={(e) => {
@@ -179,35 +209,53 @@ function Sidebar({ onCreateNote }) {
                     e.target.style.transform = "translateX(0)";
                   }}
                 >
-                  <span style={{ fontSize: "14px" }}>{f.emoji}</span>
-                  {f.name}
+                  <span style={{ marginRight: 12, fontSize: 16 }}>
+                    {folder.abbr}
+                  </span>
+                  {folder.name}
                 </div>
               ))}
             </div>
           </div>
         </div>
       </nav>
-      <div style={{ padding: "0 32px", marginTop: 32, borderTop: `1px solid ${sidebarBorder}`, paddingTop: 24 }}>
+
+      {/* 底部设置 */}
+      <div style={{ padding: "0 24px", marginTop: 32, borderTop: "1px solid #f0f0f0", paddingTop: 20 }}>
         <div
           style={{
+            display: "flex",
+            alignItems: "center",
             color: "#888",
             fontSize: 14,
-            marginBottom: 8,
+            marginBottom: 12,
             cursor: "pointer",
-            padding: "4px 0",
+            padding: "8px 12px",
+            borderRadius: 8,
+            transition: "background 0.2s ease"
           }}
+          onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
+          onMouseOut={(e) => e.target.style.background = "transparent"}
         >
-          ⚙️ Settings
+          <span style={{ marginRight: 12 }}>⚙️</span>
+          Settings
         </div>
         <div
           style={{
+            display: "flex",
+            alignItems: "center",
             color: "#888",
             fontSize: 14,
             cursor: "pointer",
-            padding: "4px 0",
+            padding: "8px 12px",
+            borderRadius: 8,
+            transition: "background 0.2s ease"
           }}
+          onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
+          onMouseOut={(e) => e.target.style.background = "transparent"}
         >
-          ❓ Help & Support
+          <span style={{ marginRight: 12 }}>❓</span>
+          Help & Tips
         </div>
       </div>
     </aside>
@@ -217,6 +265,7 @@ function Sidebar({ onCreateNote }) {
 function NoteList({ notes }) {
   return (
     <div>
+      {/* 标题区域优化 */}
       <div
         style={{
           display: "flex",
@@ -229,54 +278,54 @@ function NoteList({ notes }) {
           <h1 style={{ 
             fontWeight: 700, 
             fontSize: 32, 
-            color: "#222", 
+            color: accentColor, 
             margin: 0,
-            marginBottom: 8,
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            marginBottom: 4
           }}>
             My Reading Notes
           </h1>
-          <p style={{
-            color: "#666",
-            fontSize: 16,
+          <p style={{ 
+            color: "#666", 
+            fontSize: 16, 
             margin: 0,
+            fontStyle: "italic"
           }}>
-            Capture your thoughts, insights, and progress on your reading journey
+            Capture insights, track progress, and build knowledge
           </p>
         </div>
         <div
           style={{
             display: "flex",
             gap: 8,
-            background: "#f0f0f0",
-            borderRadius: 12,
-            padding: 4,
+            background: "#fff",
+            borderRadius: 16,
+            padding: 6,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+            border: "1px solid #e8e8e8"
           }}
         >
           <button
             style={{
-              background: "#fff",
+              background: accentColor,
+              color: "#fff",
               border: "none",
-              borderRadius: 8,
-              padding: "8px 16px",
-              fontWeight: 500,
-              color: "#222",
+              borderRadius: 12,
+              padding: "8px 20px",
+              fontWeight: 600,
+              fontSize: 14,
               cursor: "pointer",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
             }}
           >
-            Recent
+            Today
           </button>
           <button
             style={{
-              background: "none",
+              background: "transparent",
               border: "none",
-              borderRadius: 8,
-              padding: "8px 16px",
+              borderRadius: 12,
+              padding: "8px 20px",
               fontWeight: 500,
-              color: "#888",
+              color: "#666",
               cursor: "pointer",
             }}
           >
@@ -284,179 +333,140 @@ function NoteList({ notes }) {
           </button>
           <button
             style={{
-              background: "none",
+              background: "transparent",
               border: "none",
-              borderRadius: 8,
-              padding: "8px 16px",
+              borderRadius: 12,
+              padding: "8px 20px",
               fontWeight: 500,
-              color: "#888",
+              color: "#666",
               cursor: "pointer",
             }}
           >
-            This Month
+            All Time
           </button>
         </div>
       </div>
-      
-      {notes.length === 0 ? (
-        <div style={{
-          textAlign: "center",
-          padding: "60px 20px",
-          color: "#666",
-        }}>
-          <div style={{ fontSize: "48px", marginBottom: "16px" }}>📚</div>
-          <h3 style={{ fontSize: "24px", fontWeight: 600, marginBottom: "8px" }}>No reading notes yet</h3>
-          <p style={{ fontSize: "16px", marginBottom: "24px" }}>Start your reading journey by creating your first note!</p>
-        </div>
-      ) : (
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: 24, 
-          marginBottom: 40 
-        }}>
-          {notes.map((note, idx) => (
+
+      {/* 笔记卡片网格 */}
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", 
+        gap: 24, 
+        marginBottom: 48 
+      }}>
+        {notes.map((note, idx) => (
+          <div
+            key={idx}
+            style={{
+              background: note.color,
+              borderRadius: 20,
+              boxShadow: cardShadow,
+              padding: "24px",
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              border: "1px solid rgba(255,255,255,0.8)",
+              transition: "all 0.3s ease",
+              cursor: "pointer",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = "translateY(-4px)";
+              e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.12)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = cardShadow;
+            }}
+          >
+            {/* 笔记类型标签 */}
+            <div style={{
+              position: "absolute",
+              top: 16,
+              right: 16,
+              background: "rgba(255,255,255,0.9)",
+              borderRadius: 20,
+              padding: "4px 12px",
+              fontSize: 12,
+              fontWeight: 600,
+              color: accentColor
+            }}>
+              📚 Reading
+            </div>
+
             <div
-              key={idx}
               style={{
-                background: note.color,
-                borderRadius: 16,
-                boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                padding: "24px",
-                display: "flex",
-                flexDirection: "column",
-                position: "relative",
-                border: "1px solid rgba(255,255,255,0.2)",
-                transition: "all 0.2s ease",
-                cursor: "pointer",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = "translateY(-4px)";
-                e.currentTarget.style.boxShadow = "0 8px 30px rgba(0,0,0,0.12)";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)";
+                fontWeight: 700,
+                fontSize: 18,
+                color: "#333",
+                marginBottom: 8,
+                lineHeight: 1.3,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", marginBottom: 12 }}>
-                <span style={{ fontSize: "20px", marginRight: 8 }}>
-                  {note.category === "book" ? "📖" : 
-                   note.category === "article" ? "📄" : 
-                   note.category === "insight" ? "💡" : "📝"}
-                </span>
-                <div
-                  style={{
-                    fontWeight: 700,
-                    fontSize: 18,
-                    color: "#222",
-                    flex: 1,
-                  }}
-                >
-                  {note.title}
-                </div>
-              </div>
-              
-              {note.author && (
-                <div
-                  style={{
-                    fontSize: 14,
-                    color: "#666",
-                    marginBottom: 8,
-                    fontStyle: "italic",
-                  }}
-                >
-                  by {note.author}
-                </div>
-              )}
-              
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "#888",
-                  marginBottom: 16,
-                  fontWeight: 500,
-                }}
-              >
-                {note.date} • {note.category || "Note"}
-              </div>
-              
-              {note.summary && (
-                <div
-                  style={{
-                    fontSize: 14,
-                    color: "#555",
-                    marginBottom: 12,
-                    lineHeight: 1.5,
-                    fontWeight: 500,
-                  }}
-                >
-                  {note.summary}
-                </div>
-              )}
-              
-              <div style={{ flex: 1 }}>
-                {note.items.slice(0, 3).map((item, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      fontSize: 14,
-                      color: "#333",
-                      marginBottom: 8,
-                      lineHeight: 1.4,
-                      padding: "4px 0",
-                    }}
-                  >
-                    • {item}
-                  </div>
-                ))}
-                {note.items.length > 3 && (
-                  <div style={{ fontSize: 13, color: "#888", fontStyle: "italic" }}>
-                    +{note.items.length - 3} more notes...
-                  </div>
-                )}
-              </div>
-              
-              <div style={{ 
-                display: "flex", 
-                justifyContent: "space-between", 
-                alignItems: "center",
-                marginTop: 16,
-                paddingTop: 12,
-                borderTop: "1px solid rgba(0,0,0,0.1)"
-              }}>
-                <div style={{ display: "flex", gap: 8 }}>
-                  {note.tags && note.tags.map((tag, i) => (
-                    <span
-                      key={i}
-                      style={{
-                        fontSize: 11,
-                        background: "rgba(0,0,0,0.1)",
-                        color: "#666",
-                        padding: "2px 8px",
-                        borderRadius: 12,
-                        fontWeight: 500,
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <span
-                  style={{
-                    fontSize: 18,
-                    color: "#667eea",
-                    cursor: "pointer",
-                  }}
-                  title="Edit Note"
-                >
-                  ✏️
-                </span>
-              </div>
+              {note.title}
             </div>
-          ))}
-        </div>
-      )}
+            <div
+              style={{
+                fontSize: 13,
+                color: "#888",
+                marginBottom: 16,
+                fontWeight: 500,
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}
+            >
+              <span>📅</span>
+              {note.date}
+            </div>
+            <div style={{ flex: 1 }}>
+              {note.items.map((item, i) => (
+                <div
+                  key={i}
+                  style={{
+                    fontSize: 14,
+                    color: "#444",
+                    marginBottom: 8,
+                    lineHeight: 1.5,
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 8
+                  }}
+                >
+                  <span style={{ color: accentColor, fontWeight: 600 }}>•</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 16,
+              paddingTop: 16,
+              borderTop: "1px solid rgba(255,255,255,0.6)"
+            }}>
+              <span style={{ fontSize: 12, color: "#888" }}>
+                {note.items.length} notes
+              </span>
+              <span
+                style={{
+                  fontSize: 20,
+                  color: accentColor,
+                  cursor: "pointer",
+                  padding: "4px",
+                  borderRadius: 6,
+                  transition: "background 0.2s ease"
+                }}
+                title="Edit Note"
+                onMouseOver={(e) => e.target.style.background = "rgba(255,255,255,0.8)"}
+                onMouseOut={(e) => e.target.style.background = "transparent"}
+              >
+                ✏️
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -464,6 +474,7 @@ function NoteList({ notes }) {
 function RecentFolders() {
   return (
     <div>
+      {/* 最近文件夹标题优化 */}
       <div
         style={{
           display: "flex",
@@ -471,97 +482,145 @@ function RecentFolders() {
           marginBottom: 24,
         }}
       >
-        <h3 style={{ fontWeight: 700, fontSize: 20, color: "#222", flex: 1 }}>
-          Quick Access Categories
-        </h3>
+        <div style={{ flex: 1 }}>
+          <h2 style={{ 
+            fontWeight: 700, 
+            fontSize: 24, 
+            color: accentColor, 
+            margin: 0,
+            marginBottom: 4
+          }}>
+            Reading Categories
+          </h2>
+          <p style={{ 
+            color: "#666", 
+            fontSize: 14, 
+            margin: 0,
+            fontStyle: "italic"
+          }}>
+            Organize your reading journey
+          </p>
+        </div>
         <div
           style={{
             display: "flex",
             gap: 8,
-            background: "#f0f0f0",
+            background: "#fff",
             borderRadius: 12,
             padding: 4,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
           }}
         >
           <button
             style={{
-              background: "#fff",
+              background: accentColor,
+              color: "#fff",
               border: "none",
               borderRadius: 8,
-              padding: "6px 12px",
-              fontWeight: 500,
-              color: "#222",
+              padding: "6px 16px",
+              fontWeight: 600,
+              fontSize: 13,
               cursor: "pointer",
-              fontSize: 14,
             }}
           >
             All
           </button>
           <button
             style={{
-              background: "none",
+              background: "transparent",
               border: "none",
               borderRadius: 8,
-              padding: "6px 12px",
+              padding: "6px 16px",
               fontWeight: 500,
-              color: "#888",
+              color: "#666",
               cursor: "pointer",
-              fontSize: 14,
             }}
           >
             Recent
           </button>
+          <button
+            style={{
+              background: "transparent",
+              border: "none",
+              borderRadius: 8,
+              padding: "6px 16px",
+              fontWeight: 500,
+              color: "#666",
+              cursor: "pointer",
+            }}
+          >
+            Favorites
+          </button>
         </div>
       </div>
-      <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
-        {folders.slice(0, 6).map((folder) => (
+      
+      {/* 分类卡片网格 */}
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", 
+        gap: 20,
+        maxWidth: "800px"
+      }}>
+        {folders.slice(0, 6).map((folder, index) => (
           <div
-            key={folder.name}
+            key={index}
             style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              minWidth: 100,
+              padding: "20px 16px",
+              background: "#fff",
+              borderRadius: 16,
+              boxShadow: cardShadow,
+              border: "1px solid #f0f0f0",
               cursor: "pointer",
-              padding: 16,
-              borderRadius: 12,
-              transition: "all 0.2s ease",
+              transition: "all 0.3s ease",
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.background = "#f8f9fa";
-              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.transform = "translateY(-4px)";
+              e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.1)";
+              e.currentTarget.style.borderColor = folder.color;
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.background = "transparent";
               e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = cardShadow;
+              e.currentTarget.style.borderColor = "#f0f0f0";
             }}
           >
             <div
               style={{
                 width: 64,
-                height: 64,
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                height: 56,
+                background: `linear-gradient(135deg, ${folder.color}20 0%, ${folder.color}40 100%)`,
                 borderRadius: 16,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 24,
+                fontSize: 28,
                 marginBottom: 12,
-                boxShadow: "0 4px 16px rgba(102, 126, 234, 0.3)",
+                border: `2px solid ${folder.color}30`,
               }}
             >
-              {folder.emoji}
+              {folder.abbr}
             </div>
             <div
               style={{
                 fontSize: 14,
-                color: "#222",
+                color: "#333",
                 fontWeight: 600,
                 textAlign: "center",
                 lineHeight: 1.3,
               }}
             >
               {folder.name}
+            </div>
+            <div style={{
+              fontSize: 12,
+              color: "#888",
+              marginTop: 4,
+              textAlign: "center"
+            }}>
+              {Math.floor(Math.random() * 20) + 1} items
             </div>
           </div>
         ))}
@@ -573,109 +632,92 @@ function RecentFolders() {
 function App() {
   const [notes, setNotes] = useState([
     {
-      title: "The Power of Habit",
-      author: "Charles Duhigg",
+      title: "《原子习惯》读书笔记",
       date: "2025-06-27",
-      category: "book",
       color: noteColors[0],
-      summary: "Understanding how habits work and how to change them effectively.",
-      tags: ["psychology", "self-improvement"],
       items: [
-        "Habit loop: cue, routine, reward",
-        "Focus on changing the routine, not the cue or reward",
-        "Small wins create momentum for bigger changes",
-        "Keystone habits can transform entire life patterns",
+        "习惯是复利的体现，微小的改变会产生巨大的影响",
+        "专注于系统而不是目标，系统是达成目标的方法",
+        "环境设计比意志力更重要",
+        "身份认同的改变是习惯形成的根本"
       ],
     },
     {
-      title: "Deep Work Principles",
-      author: "Cal Newport",
+      title: "《深度工作》核心要点",
       date: "2025-06-26",
-      category: "book",
       color: noteColors[1],
-      summary: "Strategies for focused work in a distracted world.",
-      tags: ["productivity", "focus"],
       items: [
-        "Deep work is becoming increasingly rare and valuable",
-        "Create rituals and routines to support deep work",
-        "Minimize shallow work and distractions",
+        "深度工作能力是信息时代的超能力",
+        "消除干扰源，创造专注的工作环境",
+        "设定明确的深度工作时间块",
+        "训练专注力，就像训练肌肉一样"
       ],
     },
     {
-      title: "Reading Insights",
+      title: "效率方法论思考",
       date: "2025-06-25",
-      category: "insight",
       color: noteColors[2],
-      summary: "Personal reflections on effective reading strategies.",
-      tags: ["reading", "learning"],
       items: [
-        "Active reading with note-taking improves retention",
-        "Spaced repetition helps consolidate knowledge",
-        "Connecting ideas across books creates deeper understanding",
+        "时间管理的本质是精力管理",
+        "番茄工作法适合需要专注的任务",
+        "Getting Things Done (GTD) 清空大脑负担",
+        "定期回顾和调整工作方法"
+      ],
+    },
+    {
+      title: "技术学习笔记",
+      date: "2025-06-24",
+      color: noteColors[3],
+      items: [
+        "React Hooks 提供了更简洁的状态管理方式",
+        "TypeScript 能够提前发现潜在的类型错误",
+        "学习新技术要结合实际项目练习",
+        "保持对新技术的好奇心和学习热情"
+      ],
+    },
+    {
+      title: "个人成长感悟",
+      date: "2025-06-23",
+      color: noteColors[4],
+      items: [
+        "持续学习是保持竞争力的关键",
+        "记录和分享能够加深理解",
+        "建立知识体系比零散学习更有效",
+        "定期复习笔记，让知识真正成为自己的"
       ],
     },
   ]);
-  
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
     title: "",
-    author: "",
-    date: new Date().toISOString().split('T')[0],
-    category: "book",
-    summary: "",
-    tags: "",
+    date: "",
     color: noteColors[0],
     items: "",
   });
 
   const handleCreateNote = () => setShowForm(true);
-  
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-  
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (!form.title || !form.items) return;
-    
-    const newNote = {
-      title: form.title,
-      author: form.author,
-      date: form.date,
-      category: form.category,
-      summary: form.summary,
-      tags: form.tags ? form.tags.split(',').map(tag => tag.trim()) : [],
-      color: form.color,
-      items: form.items.split("\n").filter(Boolean),
-    };
-    
-    setNotes([newNote, ...notes]);
-    setForm({ 
-      title: "", 
-      author: "", 
-      date: new Date().toISOString().split('T')[0], 
-      category: "book",
-      summary: "",
-      tags: "",
-      color: noteColors[0], 
-      items: "" 
-    });
+    setNotes([
+      ...notes,
+      {
+        title: form.title,
+        date: form.date || new Date().toISOString().split('T')[0],
+        color: form.color,
+        items: form.items.split("\n").filter(Boolean),
+      },
+    ]);
+    setForm({ title: "", date: "", color: noteColors[0], items: "" });
     setShowForm(false);
   };
-  
   const handleFormCancel = () => {
     setShowForm(false);
-    setForm({ 
-      title: "", 
-      author: "", 
-      date: new Date().toISOString().split('T')[0], 
-      category: "book",
-      summary: "",
-      tags: "",
-      color: noteColors[0], 
-      items: "" 
-    });
+    setForm({ title: "", date: "", color: noteColors[0], items: "" });
   };
 
   return (
@@ -684,17 +726,16 @@ function App() {
         display: "flex",
         background: mainBg,
         minHeight: "100vh",
-        fontFamily: "'Inter', 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+        fontFamily:
+          "'Inter', 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
       }}
     >
       <Sidebar onCreateNote={handleCreateNote} />
       <main
         style={{
           flex: 1,
-          padding: "48px 48px 0 48px",
+          padding: "40px 48px",
           background: mainBg,
-          maxWidth: "calc(100vw - 280px)",
-          overflow: "hidden",
         }}
       >
         {showForm && (
@@ -717,208 +758,207 @@ function App() {
               style={{
                 background: "#fff",
                 borderRadius: 20,
-                boxShadow: "0 20px 60px rgba(0,0,0,0.1)",
+                boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
                 padding: 40,
                 minWidth: 480,
                 maxWidth: 600,
                 display: "flex",
                 flexDirection: "column",
                 gap: 20,
-                maxHeight: "90vh",
-                overflowY: "auto",
+                border: "1px solid #f0f0f0",
               }}
               onSubmit={handleFormSubmit}
             >
-              <div style={{ display: "flex", alignItems: "center", marginBottom: 8 }}>
-                <span style={{ fontSize: "24px", marginRight: 12 }}>📝</span>
-                <h2 style={{ margin: 0, fontWeight: 700, fontSize: 24, color: "#222" }}>
-                  New Reading Note
-                </h2>
+              <div style={{ 
+                display: "flex", 
+                alignItems: "center", 
+                marginBottom: 16,
+                paddingBottom: 16,
+                borderBottom: "1px solid #f0f0f0"
+              }}>
+                <div style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 12,
+                  background: `linear-gradient(135deg, ${accentColor} 0%, #d2691e 100%)`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 20,
+                  marginRight: 16
+                }}>
+                  📝
+                </div>
+                <div>
+                  <h2 style={{ margin: 0, fontWeight: 700, fontSize: 24, color: accentColor }}>
+                    New Reading Note
+                  </h2>
+                  <p style={{ margin: 0, color: "#666", fontSize: 14, marginTop: 4 }}>
+                    Capture your reading insights and thoughts
+                  </p>
+                </div>
               </div>
-              
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                <input
-                  name="title"
-                  placeholder="Book/Article Title *"
-                  value={form.title}
-                  onChange={handleFormChange}
-                  style={{ 
-                    padding: 12, 
-                    borderRadius: 12, 
-                    border: "2px solid #f0f0f0",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    outline: "none",
-                    transition: "border-color 0.2s ease",
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = "#667eea"}
-                  onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
-                  required
-                />
-                <input
-                  name="author"
-                  placeholder="Author (optional)"
-                  value={form.author}
-                  onChange={handleFormChange}
-                  style={{ 
-                    padding: 12, 
-                    borderRadius: 12, 
-                    border: "2px solid #f0f0f0",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    outline: "none",
-                    transition: "border-color 0.2s ease",
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = "#667eea"}
-                  onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
-                />
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                <div>
+                  <label style={{ 
+                    display: "block", 
+                    fontSize: 14, 
+                    fontWeight: 600, 
+                    color: "#333", 
+                    marginBottom: 8 
+                  }}>
+                    📚 Title *
+                  </label>
+                  <input
+                    name="title"
+                    placeholder="e.g., 《原子习惯》第三章笔记"
+                    value={form.title}
+                    onChange={handleFormChange}
+                    style={{ 
+                      padding: "12px 16px", 
+                      borderRadius: 12, 
+                      border: "2px solid #f0f0f0",
+                      width: "100%",
+                      fontSize: 16,
+                      fontFamily: "inherit",
+                      transition: "border-color 0.2s ease",
+                      outline: "none"
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = accentColor}
+                    onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
+                    required
+                  />
+                </div>
+
+                <div style={{ display: "flex", gap: 16 }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ 
+                      display: "block", 
+                      fontSize: 14, 
+                      fontWeight: 600, 
+                      color: "#333", 
+                      marginBottom: 8 
+                    }}>
+                      📅 Date
+                    </label>
+                    <input
+                      name="date"
+                      type="date"
+                      value={form.date}
+                      onChange={handleFormChange}
+                      style={{ 
+                        padding: "12px 16px", 
+                        borderRadius: 12, 
+                        border: "2px solid #f0f0f0",
+                        width: "100%",
+                        fontSize: 16,
+                        fontFamily: "inherit",
+                        outline: "none"
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = accentColor}
+                      onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
+                    />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ 
+                      display: "block", 
+                      fontSize: 14, 
+                      fontWeight: 600, 
+                      color: "#333", 
+                      marginBottom: 8 
+                    }}>
+                      🎨 Note Color
+                    </label>
+                    <select
+                      name="color"
+                      value={form.color}
+                      onChange={handleFormChange}
+                      style={{ 
+                        padding: "12px 16px", 
+                        borderRadius: 12, 
+                        border: "2px solid #f0f0f0",
+                        width: "100%",
+                        fontSize: 16,
+                        fontFamily: "inherit",
+                        outline: "none",
+                        background: "#fff"
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = accentColor}
+                      onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
+                    >
+                      <option value={noteColors[0]}>📄 Warm Beige</option>
+                      <option value={noteColors[1]}>🌊 Fresh Blue</option>
+                      <option value={noteColors[2]}>🌱 Gentle Green</option>
+                      <option value={noteColors[3]}>🌸 Soft Pink</option>
+                      <option value={noteColors[4]}>⭐ Highlight Yellow</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ 
+                    display: "block", 
+                    fontSize: 14, 
+                    fontWeight: 600, 
+                    color: "#333", 
+                    marginBottom: 8 
+                  }}>
+                    ✍️ Notes & Insights *
+                  </label>
+                  <textarea
+                    name="items"
+                    placeholder="Enter your notes, one insight per line...&#10;&#10;例如：&#10;习惯是复利的体现&#10;微小的改变会产生巨大的影响&#10;专注于系统而不是目标"
+                    value={form.items}
+                    onChange={handleFormChange}
+                    style={{ 
+                      padding: "16px", 
+                      borderRadius: 12, 
+                      border: "2px solid #f0f0f0",
+                      width: "100%",
+                      minHeight: 120,
+                      fontSize: 16,
+                      fontFamily: "inherit",
+                      resize: "vertical",
+                      lineHeight: 1.5,
+                      outline: "none"
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = accentColor}
+                    onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
+                    required
+                  />
+                </div>
               </div>
-              
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                <input
-                  name="date"
-                  type="date"
-                  value={form.date}
-                  onChange={handleFormChange}
-                  style={{ 
-                    padding: 12, 
-                    borderRadius: 12, 
-                    border: "2px solid #f0f0f0",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    outline: "none",
-                    transition: "border-color 0.2s ease",
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = "#667eea"}
-                  onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
-                />
-                <select
-                  name="category"
-                  value={form.category}
-                  onChange={handleFormChange}
-                  style={{ 
-                    padding: 12, 
-                    borderRadius: 12, 
-                    border: "2px solid #f0f0f0",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    outline: "none",
-                    transition: "border-color 0.2s ease",
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = "#667eea"}
-                  onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
-                >
-                  <option value="book">📖 Book</option>
-                  <option value="article">📄 Article</option>
-                  <option value="insight">💡 Personal Insight</option>
-                  <option value="note">📝 General Note</option>
-                </select>
-              </div>
-              
-              <textarea
-                name="summary"
-                placeholder="Brief summary or key takeaway (optional)"
-                value={form.summary}
-                onChange={handleFormChange}
-                style={{ 
-                  padding: 12, 
-                  borderRadius: 12, 
-                  border: "2px solid #f0f0f0",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  minHeight: 80,
-                  resize: "vertical",
-                  outline: "none",
-                  transition: "border-color 0.2s ease",
-                }}
-                onFocus={(e) => e.target.style.borderColor = "#667eea"}
-                onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
-              />
-              
-              <input
-                name="tags"
-                placeholder="Tags (separated by commas)"
-                value={form.tags}
-                onChange={handleFormChange}
-                style={{ 
-                  padding: 12, 
-                  borderRadius: 12, 
-                  border: "2px solid #f0f0f0",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  outline: "none",
-                  transition: "border-color 0.2s ease",
-                }}
-                onFocus={(e) => e.target.style.borderColor = "#667eea"}
-                onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
-              />
-              
-              <select
-                name="color"
-                value={form.color}
-                onChange={handleFormChange}
-                style={{ 
-                  padding: 12, 
-                  borderRadius: 12, 
-                  border: "2px solid #f0f0f0",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  outline: "none",
-                  transition: "border-color 0.2s ease",
-                }}
-                onFocus={(e) => e.target.style.borderColor = "#667eea"}
-                onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
-              >
-                {noteColors.map((c, i) => (
-                  <option value={c} key={i}>
-                    Color Theme {i + 1}
-                  </option>
-                ))}
-              </select>
-              
-              <textarea
-                name="items"
-                placeholder="Your notes, insights, or key points (one per line) *"
-                value={form.items}
-                onChange={handleFormChange}
-                style={{ 
-                  padding: 12, 
-                  borderRadius: 12, 
-                  border: "2px solid #f0f0f0",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  minHeight: 120,
-                  resize: "vertical",
-                  outline: "none",
-                  transition: "border-color 0.2s ease",
-                }}
-                onFocus={(e) => e.target.style.borderColor = "#667eea"}
-                onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
-                required
-              />
-              
-              <div style={{ display: "flex", gap: 16, justifyContent: "flex-end", marginTop: 8 }}>
+
+              <div style={{ 
+                display: "flex", 
+                gap: 16, 
+                justifyContent: "flex-end",
+                marginTop: 8,
+                paddingTop: 20,
+                borderTop: "1px solid #f0f0f0"
+              }}>
                 <button 
                   type="button" 
                   onClick={handleFormCancel} 
                   style={{ 
                     padding: "12px 24px", 
                     borderRadius: 12, 
-                    border: "2px solid #f0f0f0", 
+                    border: "2px solid #e0e0e0", 
                     background: "#fff", 
                     color: "#666", 
                     fontWeight: 600, 
+                    fontSize: 16,
                     cursor: "pointer",
-                    fontSize: 14,
-                    transition: "all 0.2s ease",
+                    transition: "all 0.2s ease"
                   }}
                   onMouseOver={(e) => {
-                    e.target.style.borderColor = "#ddd";
-                    e.target.style.background = "#f8f9fa";
+                    e.target.style.background = "#f8f8f8";
+                    e.target.style.borderColor = "#d0d0d0";
                   }}
                   onMouseOut={(e) => {
-                    e.target.style.borderColor = "#f0f0f0";
                     e.target.style.background = "#fff";
+                    e.target.style.borderColor = "#e0e0e0";
                   }}
                 >
                   Cancel
@@ -926,27 +966,27 @@ function App() {
                 <button 
                   type="submit" 
                   style={{ 
-                    padding: "12px 24px", 
+                    padding: "12px 32px", 
                     borderRadius: 12, 
                     border: "none", 
-                    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", 
+                    background: `linear-gradient(135deg, ${accentColor} 0%, #d2691e 100%)`, 
                     color: "#fff", 
                     fontWeight: 600, 
+                    fontSize: 16,
                     cursor: "pointer",
-                    fontSize: 14,
-                    boxShadow: "0 4px 16px rgba(102, 126, 234, 0.3)",
                     transition: "all 0.2s ease",
+                    boxShadow: "0 4px 12px rgba(139, 69, 19, 0.3)"
                   }}
                   onMouseOver={(e) => {
                     e.target.style.transform = "translateY(-1px)";
-                    e.target.style.boxShadow = "0 6px 20px rgba(102, 126, 234, 0.4)";
+                    e.target.style.boxShadow = "0 6px 16px rgba(139, 69, 19, 0.4)";
                   }}
                   onMouseOut={(e) => {
                     e.target.style.transform = "translateY(0)";
-                    e.target.style.boxShadow = "0 4px 16px rgba(102, 126, 234, 0.3)";
+                    e.target.style.boxShadow = "0 4px 12px rgba(139, 69, 19, 0.3)";
                   }}
                 >
-                  📝 Save Reading Note
+                  📚 Save Note
                 </button>
               </div>
             </form>
