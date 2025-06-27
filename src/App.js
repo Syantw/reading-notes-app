@@ -13,7 +13,6 @@ const noteColors = [
   "#fdf0f7", // 浅粉色 - 温和感
   "#fffacd", // 柠檬色 - 重点标记
 ];
-const folderColor = "#d4a574"; // 更像书本的棕色
 const accentColor = "#8b4513"; // 书本棕色作为主色调
 
 // 针对阅读笔记的文件夹分类
@@ -100,11 +99,11 @@ function Sidebar({ onCreateNote }) {
               transition: "all 0.2s ease",
             }}
             onClick={onCreateNote}
-            onMouseOver={(e) => {
+            onMouseOver={e => {
               e.target.style.transform = "translateY(-1px)";
               e.target.style.boxShadow = "0 6px 16px rgba(139, 69, 19, 0.4)";
             }}
-            onMouseOut={(e) => {
+            onMouseOut={e => {
               e.target.style.transform = "translateY(0)";
               e.target.style.boxShadow = "0 4px 12px rgba(139, 69, 19, 0.3)";
             }}
@@ -121,50 +120,53 @@ function Sidebar({ onCreateNote }) {
               marginBottom: 32,
             }}
           >
-            <div style={{ 
-              display: "flex", 
-              alignItems: "center", 
-              color: "#444", 
-              fontWeight: 500, 
-              cursor: "pointer",
-              padding: "8px 12px",
-              borderRadius: 8,
-              transition: "background 0.2s ease"
-            }}
-            onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
-            onMouseOut={(e) => e.target.style.background = "transparent"}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                color: "#444",
+                fontWeight: 500,
+                cursor: "pointer",
+                padding: "8px 12px",
+                borderRadius: 8,
+                transition: "background 0.2s ease",
+              }}
+              onMouseOver={e => (e.target.style.background = "#f0f0f0")}
+              onMouseOut={e => (e.target.style.background = "transparent")}
             >
               <span style={{ marginRight: 12, fontSize: 16 }}>🔍</span>
               Search Notes
             </div>
-            <div style={{ 
-              display: "flex", 
-              alignItems: "center", 
-              color: "#444", 
-              fontWeight: 500, 
-              cursor: "pointer",
-              padding: "8px 12px",
-              borderRadius: 8,
-              transition: "background 0.2s ease"
-            }}
-            onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
-            onMouseOut={(e) => e.target.style.background = "transparent"}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                color: "#444",
+                fontWeight: 500,
+                cursor: "pointer",
+                padding: "8px 12px",
+                borderRadius: 8,
+                transition: "background 0.2s ease",
+              }}
+              onMouseOver={e => (e.target.style.background = "#f0f0f0")}
+              onMouseOut={e => (e.target.style.background = "transparent")}
             >
               <span style={{ marginRight: 12, fontSize: 16 }}>📋</span>
               Reading List
             </div>
-            <div style={{ 
-              display: "flex", 
-              alignItems: "center", 
-              color: "#444", 
-              fontWeight: 500, 
-              cursor: "pointer",
-              padding: "8px 12px",
-              borderRadius: 8,
-              transition: "background 0.2s ease"
-            }}
-            onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
-            onMouseOut={(e) => e.target.style.background = "transparent"}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                color: "#444",
+                fontWeight: 500,
+                cursor: "pointer",
+                padding: "8px 12px",
+                borderRadius: 8,
+                transition: "background 0.2s ease",
+              }}
+              onMouseOver={e => (e.target.style.background = "#f0f0f0")}
+              onMouseOut={e => (e.target.style.background = "transparent")}
             >
               <span style={{ marginRight: 12, fontSize: 16 }}>⭐</span>
               Favorites
@@ -200,11 +202,11 @@ function Sidebar({ onCreateNote }) {
                     borderRadius: 10,
                     transition: "all 0.2s ease",
                   }}
-                  onMouseOver={(e) => {
+                  onMouseOver={e => {
                     e.target.style.background = folder.color + "15";
                     e.target.style.transform = "translateX(4px)";
                   }}
-                  onMouseOut={(e) => {
+                  onMouseOut={e => {
                     e.target.style.background = "transparent";
                     e.target.style.transform = "translateX(0)";
                   }}
@@ -221,7 +223,14 @@ function Sidebar({ onCreateNote }) {
       </nav>
 
       {/* 底部设置 */}
-      <div style={{ padding: "0 24px", marginTop: 32, borderTop: "1px solid #f0f0f0", paddingTop: 20 }}>
+      <div
+        style={{
+          padding: "0 24px",
+          marginTop: 32,
+          borderTop: "1px solid #f0f0f0",
+          paddingTop: 20,
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -232,10 +241,10 @@ function Sidebar({ onCreateNote }) {
             cursor: "pointer",
             padding: "8px 12px",
             borderRadius: 8,
-            transition: "background 0.2s ease"
+            transition: "background 0.2s ease",
           }}
-          onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
-          onMouseOut={(e) => e.target.style.background = "transparent"}
+          onMouseOver={e => (e.target.style.background = "#f0f0f0")}
+          onMouseOut={e => (e.target.style.background = "transparent")}
         >
           <span style={{ marginRight: 12 }}>⚙️</span>
           Settings
@@ -249,10 +258,10 @@ function Sidebar({ onCreateNote }) {
             cursor: "pointer",
             padding: "8px 12px",
             borderRadius: 8,
-            transition: "background 0.2s ease"
+            transition: "background 0.2s ease",
           }}
-          onMouseOver={(e) => e.target.style.background = "#f0f0f0"}
-          onMouseOut={(e) => e.target.style.background = "transparent"}
+          onMouseOver={e => (e.target.style.background = "#f0f0f0")}
+          onMouseOut={e => (e.target.style.background = "transparent")}
         >
           <span style={{ marginRight: 12 }}>❓</span>
           Help & Tips
@@ -275,21 +284,25 @@ function NoteList({ notes }) {
         }}
       >
         <div style={{ flex: 1 }}>
-          <h1 style={{ 
-            fontWeight: 700, 
-            fontSize: 32, 
-            color: accentColor, 
-            margin: 0,
-            marginBottom: 4
-          }}>
+          <h1
+            style={{
+              fontWeight: 700,
+              fontSize: 32,
+              color: accentColor,
+              margin: 0,
+              marginBottom: 4,
+            }}
+          >
             My Reading Notes
           </h1>
-          <p style={{ 
-            color: "#666", 
-            fontSize: 16, 
-            margin: 0,
-            fontStyle: "italic"
-          }}>
+          <p
+            style={{
+              color: "#666",
+              fontSize: 16,
+              margin: 0,
+              fontStyle: "italic",
+            }}
+          >
             Capture insights, track progress, and build knowledge
           </p>
         </div>
@@ -301,7 +314,7 @@ function NoteList({ notes }) {
             borderRadius: 16,
             padding: 6,
             boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-            border: "1px solid #e8e8e8"
+            border: "1px solid #e8e8e8",
           }}
         >
           <button
@@ -348,12 +361,14 @@ function NoteList({ notes }) {
       </div>
 
       {/* 笔记卡片网格 */}
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", 
-        gap: 24, 
-        marginBottom: 48 
-      }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+          gap: 24,
+          marginBottom: 48,
+        }}
+      >
         {notes.map((note, idx) => (
           <div
             key={idx}
@@ -369,27 +384,29 @@ function NoteList({ notes }) {
               transition: "all 0.3s ease",
               cursor: "pointer",
             }}
-            onMouseOver={(e) => {
+            onMouseOver={e => {
               e.currentTarget.style.transform = "translateY(-4px)";
               e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.12)";
             }}
-            onMouseOut={(e) => {
+            onMouseOut={e => {
               e.currentTarget.style.transform = "translateY(0)";
               e.currentTarget.style.boxShadow = cardShadow;
             }}
           >
             {/* 笔记类型标签 */}
-            <div style={{
-              position: "absolute",
-              top: 16,
-              right: 16,
-              background: "rgba(255,255,255,0.9)",
-              borderRadius: 20,
-              padding: "4px 12px",
-              fontSize: 12,
-              fontWeight: 600,
-              color: accentColor
-            }}>
+            <div
+              style={{
+                position: "absolute",
+                top: 16,
+                right: 16,
+                background: "rgba(255,255,255,0.9)",
+                borderRadius: 20,
+                padding: "4px 12px",
+                fontSize: 12,
+                fontWeight: 600,
+                color: accentColor,
+              }}
+            >
               📚 Reading
             </div>
 
@@ -412,7 +429,7 @@ function NoteList({ notes }) {
                 fontWeight: 500,
                 display: "flex",
                 alignItems: "center",
-                gap: 8
+                gap: 8,
               }}
             >
               <span>📅</span>
@@ -429,7 +446,7 @@ function NoteList({ notes }) {
                     lineHeight: 1.5,
                     display: "flex",
                     alignItems: "flex-start",
-                    gap: 8
+                    gap: 8,
                   }}
                 >
                   <span style={{ color: accentColor, fontWeight: 600 }}>•</span>
@@ -437,14 +454,16 @@ function NoteList({ notes }) {
                 </div>
               ))}
             </div>
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: 16,
-              paddingTop: 16,
-              borderTop: "1px solid rgba(255,255,255,0.6)"
-            }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 16,
+                paddingTop: 16,
+                borderTop: "1px solid rgba(255,255,255,0.6)",
+              }}
+            >
               <span style={{ fontSize: 12, color: "#888" }}>
                 {note.items.length} notes
               </span>
@@ -455,11 +474,13 @@ function NoteList({ notes }) {
                   cursor: "pointer",
                   padding: "4px",
                   borderRadius: 6,
-                  transition: "background 0.2s ease"
+                  transition: "background 0.2s ease",
                 }}
                 title="Edit Note"
-                onMouseOver={(e) => e.target.style.background = "rgba(255,255,255,0.8)"}
-                onMouseOut={(e) => e.target.style.background = "transparent"}
+                onMouseOver={e =>
+                  (e.target.style.background = "rgba(255,255,255,0.8)")
+                }
+                onMouseOut={e => (e.target.style.background = "transparent")}
               >
                 ✏️
               </span>
@@ -483,21 +504,25 @@ function RecentFolders() {
         }}
       >
         <div style={{ flex: 1 }}>
-          <h2 style={{ 
-            fontWeight: 700, 
-            fontSize: 24, 
-            color: accentColor, 
-            margin: 0,
-            marginBottom: 4
-          }}>
+          <h2
+            style={{
+              fontWeight: 700,
+              fontSize: 24,
+              color: accentColor,
+              margin: 0,
+              marginBottom: 4,
+            }}
+          >
             Reading Categories
           </h2>
-          <p style={{ 
-            color: "#666", 
-            fontSize: 14, 
-            margin: 0,
-            fontStyle: "italic"
-          }}>
+          <p
+            style={{
+              color: "#666",
+              fontSize: 14,
+              margin: 0,
+              fontStyle: "italic",
+            }}
+          >
             Organize your reading journey
           </p>
         </div>
@@ -553,14 +578,16 @@ function RecentFolders() {
           </button>
         </div>
       </div>
-      
+
       {/* 分类卡片网格 */}
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", 
-        gap: 20,
-        maxWidth: "800px"
-      }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+          gap: 20,
+          maxWidth: "800px",
+        }}
+      >
         {folders.slice(0, 6).map((folder, index) => (
           <div
             key={index}
@@ -576,12 +603,12 @@ function RecentFolders() {
               cursor: "pointer",
               transition: "all 0.3s ease",
             }}
-            onMouseOver={(e) => {
+            onMouseOver={e => {
               e.currentTarget.style.transform = "translateY(-4px)";
               e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.1)";
               e.currentTarget.style.borderColor = folder.color;
             }}
-            onMouseOut={(e) => {
+            onMouseOut={e => {
               e.currentTarget.style.transform = "translateY(0)";
               e.currentTarget.style.boxShadow = cardShadow;
               e.currentTarget.style.borderColor = "#f0f0f0";
@@ -614,12 +641,14 @@ function RecentFolders() {
             >
               {folder.name}
             </div>
-            <div style={{
-              fontSize: 12,
-              color: "#888",
-              marginTop: 4,
-              textAlign: "center"
-            }}>
+            <div
+              style={{
+                fontSize: 12,
+                color: "#888",
+                marginTop: 4,
+                textAlign: "center",
+              }}
+            >
               {Math.floor(Math.random() * 20) + 1} items
             </div>
           </div>
@@ -639,7 +668,7 @@ function App() {
         "习惯是复利的体现，微小的改变会产生巨大的影响",
         "专注于系统而不是目标，系统是达成目标的方法",
         "环境设计比意志力更重要",
-        "身份认同的改变是习惯形成的根本"
+        "身份认同的改变是习惯形成的根本",
       ],
     },
     {
@@ -650,7 +679,7 @@ function App() {
         "深度工作能力是信息时代的超能力",
         "消除干扰源，创造专注的工作环境",
         "设定明确的深度工作时间块",
-        "训练专注力，就像训练肌肉一样"
+        "训练专注力，就像训练肌肉一样",
       ],
     },
     {
@@ -661,7 +690,7 @@ function App() {
         "时间管理的本质是精力管理",
         "番茄工作法适合需要专注的任务",
         "Getting Things Done (GTD) 清空大脑负担",
-        "定期回顾和调整工作方法"
+        "定期回顾和调整工作方法",
       ],
     },
     {
@@ -672,7 +701,7 @@ function App() {
         "React Hooks 提供了更简洁的状态管理方式",
         "TypeScript 能够提前发现潜在的类型错误",
         "学习新技术要结合实际项目练习",
-        "保持对新技术的好奇心和学习热情"
+        "保持对新技术的好奇心和学习热情",
       ],
     },
     {
@@ -683,7 +712,7 @@ function App() {
         "持续学习是保持竞争力的关键",
         "记录和分享能够加深理解",
         "建立知识体系比零散学习更有效",
-        "定期复习笔记，让知识真正成为自己的"
+        "定期复习笔记，让知识真正成为自己的",
       ],
     },
   ]);
@@ -696,18 +725,18 @@ function App() {
   });
 
   const handleCreateNote = () => setShowForm(true);
-  const handleFormChange = (e) => {
+  const handleFormChange = e => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm(prev => ({ ...prev, [name]: value }));
   };
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = e => {
     e.preventDefault();
     if (!form.title || !form.items) return;
     setNotes([
       ...notes,
       {
         title: form.title,
-        date: form.date || new Date().toISOString().split('T')[0],
+        date: form.date || new Date().toISOString().split("T")[0],
         color: form.color,
         items: form.items.split("\n").filter(Boolean),
       },
@@ -769,45 +798,67 @@ function App() {
               }}
               onSubmit={handleFormSubmit}
             >
-              <div style={{ 
-                display: "flex", 
-                alignItems: "center", 
-                marginBottom: 16,
-                paddingBottom: 16,
-                borderBottom: "1px solid #f0f0f0"
-              }}>
-                <div style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 12,
-                  background: `linear-gradient(135deg, ${accentColor} 0%, #d2691e 100%)`,
+              <div
+                style={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 20,
-                  marginRight: 16
-                }}>
+                  marginBottom: 16,
+                  paddingBottom: 16,
+                  borderBottom: "1px solid #f0f0f0",
+                }}
+              >
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 12,
+                    background: `linear-gradient(135deg, ${accentColor} 0%, #d2691e 100%)`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 20,
+                    marginRight: 16,
+                  }}
+                >
                   📝
                 </div>
                 <div>
-                  <h2 style={{ margin: 0, fontWeight: 700, fontSize: 24, color: accentColor }}>
+                  <h2
+                    style={{
+                      margin: 0,
+                      fontWeight: 700,
+                      fontSize: 24,
+                      color: accentColor,
+                    }}
+                  >
                     New Reading Note
                   </h2>
-                  <p style={{ margin: 0, color: "#666", fontSize: 14, marginTop: 4 }}>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "#666",
+                      fontSize: 14,
+                      marginTop: 4,
+                    }}
+                  >
                     Capture your reading insights and thoughts
                   </p>
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: 16 }}
+              >
                 <div>
-                  <label style={{ 
-                    display: "block", 
-                    fontSize: 14, 
-                    fontWeight: 600, 
-                    color: "#333", 
-                    marginBottom: 8 
-                  }}>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "#333",
+                      marginBottom: 8,
+                    }}
+                  >
                     📚 Title *
                   </label>
                   <input
@@ -815,31 +866,33 @@ function App() {
                     placeholder="e.g., 《原子习惯》第三章笔记"
                     value={form.title}
                     onChange={handleFormChange}
-                    style={{ 
-                      padding: "12px 16px", 
-                      borderRadius: 12, 
+                    style={{
+                      padding: "12px 16px",
+                      borderRadius: 12,
                       border: "2px solid #f0f0f0",
                       width: "100%",
                       fontSize: 16,
                       fontFamily: "inherit",
                       transition: "border-color 0.2s ease",
-                      outline: "none"
+                      outline: "none",
                     }}
-                    onFocus={(e) => e.target.style.borderColor = accentColor}
-                    onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
+                    onFocus={e => (e.target.style.borderColor = accentColor)}
+                    onBlur={e => (e.target.style.borderColor = "#f0f0f0")}
                     required
                   />
                 </div>
 
                 <div style={{ display: "flex", gap: 16 }}>
                   <div style={{ flex: 1 }}>
-                    <label style={{ 
-                      display: "block", 
-                      fontSize: 14, 
-                      fontWeight: 600, 
-                      color: "#333", 
-                      marginBottom: 8 
-                    }}>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: "#333",
+                        marginBottom: 8,
+                      }}
+                    >
                       📅 Date
                     </label>
                     <input
@@ -847,45 +900,47 @@ function App() {
                       type="date"
                       value={form.date}
                       onChange={handleFormChange}
-                      style={{ 
-                        padding: "12px 16px", 
-                        borderRadius: 12, 
+                      style={{
+                        padding: "12px 16px",
+                        borderRadius: 12,
                         border: "2px solid #f0f0f0",
                         width: "100%",
                         fontSize: 16,
                         fontFamily: "inherit",
-                        outline: "none"
+                        outline: "none",
                       }}
-                      onFocus={(e) => e.target.style.borderColor = accentColor}
-                      onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
+                      onFocus={e => (e.target.style.borderColor = accentColor)}
+                      onBlur={e => (e.target.style.borderColor = "#f0f0f0")}
                     />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <label style={{ 
-                      display: "block", 
-                      fontSize: 14, 
-                      fontWeight: 600, 
-                      color: "#333", 
-                      marginBottom: 8 
-                    }}>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: "#333",
+                        marginBottom: 8,
+                      }}
+                    >
                       🎨 Note Color
                     </label>
                     <select
                       name="color"
                       value={form.color}
                       onChange={handleFormChange}
-                      style={{ 
-                        padding: "12px 16px", 
-                        borderRadius: 12, 
+                      style={{
+                        padding: "12px 16px",
+                        borderRadius: 12,
                         border: "2px solid #f0f0f0",
                         width: "100%",
                         fontSize: 16,
                         fontFamily: "inherit",
                         outline: "none",
-                        background: "#fff"
+                        background: "#fff",
                       }}
-                      onFocus={(e) => e.target.style.borderColor = accentColor}
-                      onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
+                      onFocus={e => (e.target.style.borderColor = accentColor)}
+                      onBlur={e => (e.target.style.borderColor = "#f0f0f0")}
                     >
                       <option value={noteColors[0]}>📄 Warm Beige</option>
                       <option value={noteColors[1]}>🌊 Fresh Blue</option>
@@ -897,13 +952,15 @@ function App() {
                 </div>
 
                 <div>
-                  <label style={{ 
-                    display: "block", 
-                    fontSize: 14, 
-                    fontWeight: 600, 
-                    color: "#333", 
-                    marginBottom: 8 
-                  }}>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "#333",
+                      marginBottom: 8,
+                    }}
+                  >
                     ✍️ Notes & Insights *
                   </label>
                   <textarea
@@ -911,9 +968,9 @@ function App() {
                     placeholder="Enter your notes, one insight per line...&#10;&#10;例如：&#10;习惯是复利的体现&#10;微小的改变会产生巨大的影响&#10;专注于系统而不是目标"
                     value={form.items}
                     onChange={handleFormChange}
-                    style={{ 
-                      padding: "16px", 
-                      borderRadius: 12, 
+                    style={{
+                      padding: "16px",
+                      borderRadius: 12,
                       border: "2px solid #f0f0f0",
                       width: "100%",
                       minHeight: 120,
@@ -921,69 +978,73 @@ function App() {
                       fontFamily: "inherit",
                       resize: "vertical",
                       lineHeight: 1.5,
-                      outline: "none"
+                      outline: "none",
                     }}
-                    onFocus={(e) => e.target.style.borderColor = accentColor}
-                    onBlur={(e) => e.target.style.borderColor = "#f0f0f0"}
+                    onFocus={e => (e.target.style.borderColor = accentColor)}
+                    onBlur={e => (e.target.style.borderColor = "#f0f0f0")}
                     required
                   />
                 </div>
               </div>
 
-              <div style={{ 
-                display: "flex", 
-                gap: 16, 
-                justifyContent: "flex-end",
-                marginTop: 8,
-                paddingTop: 20,
-                borderTop: "1px solid #f0f0f0"
-              }}>
-                <button 
-                  type="button" 
-                  onClick={handleFormCancel} 
-                  style={{ 
-                    padding: "12px 24px", 
-                    borderRadius: 12, 
-                    border: "2px solid #e0e0e0", 
-                    background: "#fff", 
-                    color: "#666", 
-                    fontWeight: 600, 
+              <div
+                style={{
+                  display: "flex",
+                  gap: 16,
+                  justifyContent: "flex-end",
+                  marginTop: 8,
+                  paddingTop: 20,
+                  borderTop: "1px solid #f0f0f0",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={handleFormCancel}
+                  style={{
+                    padding: "12px 24px",
+                    borderRadius: 12,
+                    border: "2px solid #e0e0e0",
+                    background: "#fff",
+                    color: "#666",
+                    fontWeight: 600,
                     fontSize: 16,
                     cursor: "pointer",
-                    transition: "all 0.2s ease"
+                    transition: "all 0.2s ease",
                   }}
-                  onMouseOver={(e) => {
+                  onMouseOver={e => {
                     e.target.style.background = "#f8f8f8";
                     e.target.style.borderColor = "#d0d0d0";
                   }}
-                  onMouseOut={(e) => {
+                  onMouseOut={e => {
                     e.target.style.background = "#fff";
                     e.target.style.borderColor = "#e0e0e0";
                   }}
                 >
                   Cancel
                 </button>
-                <button 
-                  type="submit" 
-                  style={{ 
-                    padding: "12px 32px", 
-                    borderRadius: 12, 
-                    border: "none", 
-                    background: `linear-gradient(135deg, ${accentColor} 0%, #d2691e 100%)`, 
-                    color: "#fff", 
-                    fontWeight: 600, 
+                <button
+                  type="submit"
+                  style={{
+                    padding: "12px 32px",
+                    borderRadius: 12,
+                    border: "none",
+                    background: `linear-gradient(135deg, ${accentColor} 0%, #d2691e 100%)`,
+                    color: "#fff",
+                    fontWeight: 600,
                     fontSize: 16,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                    boxShadow: "0 4px 12px rgba(139, 69, 19, 0.3)"
+                    boxShadow: "0 4px 12px rgba(139, 69, 19, 0.3)",
                   }}
-                  onMouseOver={(e) => {
+                  onMouseOver={e => {
                     e.target.style.transform = "translateY(-1px)";
-                    e.target.style.boxShadow = "0 6px 16px rgba(139, 69, 19, 0.4)";
+                    e.target.style.boxShadow =
+                      "0 6px 16px rgba(139, 69, 19, 0.4)";
                   }}
-                  onMouseOut={(e) => {
+                  onMouseOut={e => {
                     e.target.style.transform = "translateY(0)";
-                    e.target.style.boxShadow = "0 4px 12px rgba(139, 69, 19, 0.3)";
+                    e.target.style.boxShadow =
+                      "0 4px 12px rgba(139, 69, 19, 0.3)";
                   }}
                 >
                   📚 Save Note
