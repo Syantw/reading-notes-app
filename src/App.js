@@ -542,9 +542,9 @@ function App() {
                 required
               />
               <input
-                name="date"
-                placeholder="Date"
-                value={form.date}
+                name="abstract"
+                placeholder="Abstract"
+                value={form.abstract}
                 onChange={handleFormChange}
                 style={{ padding: 8, borderRadius: 8, border: "1px solid #eee" }}
               />
