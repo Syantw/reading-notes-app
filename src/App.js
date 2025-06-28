@@ -3,7 +3,8 @@ import { THEME } from './constants/theme';
 import { INITIAL_NOTES } from './data/mockData';
 import Sidebar from './components/Sidebar/Sidebar';
 import NoteCard from './components/NoteCard/NoteCard';
-import NoteDetail from './components/NoteDetail/NoteDetail';
+import Detail from './components/Detail/Detail';
+import RecentFolders from './components/RecentFolders/RecentFolders';
 
 const App = () => {
   const [notes, setNotes] = useState(INITIAL_NOTES);
@@ -260,6 +261,11 @@ const App = () => {
             />
           ))}
         </div>
+
+        <RecentFolders
+          onFolderClick={handleNavigate}
+          currentView={currentView}
+        />
       </main>
 
       {/* 创建笔记表单 */}
@@ -313,13 +319,16 @@ const App = () => {
             <div
               style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}
             >
+              {/* 取消按钮 */}
               <button
                 type="button"
-                onClick={handleFormCancel}
                 style={secondaryButtonStyle}
+                onClick={handleFormCancel}
               >
                 Cancel
               </button>
+
+              {/* 添加按钮 */}
               <button type="submit" style={primaryButtonStyle}>
                 Add Note
               </button>
@@ -330,7 +339,7 @@ const App = () => {
 
       {/* 笔记详情页面 */}
       {selectedNote && (
-        <NoteDetail
+        <Detail
           note={selectedNote}
           onSave={handleSaveNote}
           onClose={handleCloseDetail}

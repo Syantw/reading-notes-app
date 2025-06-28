@@ -55,15 +55,23 @@ const Sidebar = ({ onCreateNote, onNavigate, currentView }) => {
     color: THEME.colors.text.primary,
     fontWeight: 500,
     cursor: 'pointer',
-    padding: '8px 0',
+    padding: '8px 12px',
     borderRadius: THEME.borderRadius.small,
-    paddingLeft: 8,
-    transition: 'background-color 0.2s',
+    transition: `all ${THEME.transitions.fast}`,
+    position: 'relative',
+    userSelect: 'none',
   };
 
   const activeNavItemStyle = {
     ...navItemStyle,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: THEME.colors.interactive.active,
+    color: THEME.colors.interactive.focus,
+    fontWeight: 600,
+  };
+
+  const hoverItemStyle = {
+    backgroundColor: THEME.colors.interactive.hover,
+    transform: 'translateX(2px)',
   };
 
   return (
@@ -107,6 +115,17 @@ const Sidebar = ({ onCreateNote, onNavigate, currentView }) => {
                 currentView === 'search' ? activeNavItemStyle : navItemStyle
               }
               onClick={() => onNavigate('search')}
+              onMouseEnter={e => {
+                if (currentView !== 'search') {
+                  Object.assign(e.target.style, hoverItemStyle);
+                }
+              }}
+              onMouseLeave={e => {
+                if (currentView !== 'search') {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.transform = 'translateX(0)';
+                }
+              }}
             >
               🔍 Search
             </div>
@@ -115,6 +134,17 @@ const Sidebar = ({ onCreateNote, onNavigate, currentView }) => {
                 currentView === 'archives' ? activeNavItemStyle : navItemStyle
               }
               onClick={() => onNavigate('archives')}
+              onMouseEnter={e => {
+                if (currentView !== 'archives') {
+                  Object.assign(e.target.style, hoverItemStyle);
+                }
+              }}
+              onMouseLeave={e => {
+                if (currentView !== 'archives') {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.transform = 'translateX(0)';
+                }
+              }}
             >
               🗄️ Archives
             </div>
@@ -141,8 +171,19 @@ const Sidebar = ({ onCreateNote, onNavigate, currentView }) => {
                       : navItemStyle
                   }
                   onClick={() => onNavigate(`folder-${folder.id}`)}
+                  onMouseEnter={e => {
+                    if (currentView !== `folder-${folder.id}`) {
+                      Object.assign(e.target.style, hoverItemStyle);
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (currentView !== `folder-${folder.id}`) {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.transform = 'translateX(0)';
+                    }
+                  }}
                 >
-                  {folder.name}
+                  📁 {folder.name}
                 </div>
               ))}
             </div>

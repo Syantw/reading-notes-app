@@ -16,7 +16,7 @@ export const FOLDERS = [
 export const INITIAL_NOTES = [
   {
     id: '1',
-    title: 'Reminders',
+    title: '提醒事项',
     date: '2024-01-15',
     color: THEME.colors.note.colors[0],
     folderId: 'personal',
@@ -30,7 +30,7 @@ export const INITIAL_NOTES = [
   },
   {
     id: '2',
-    title: 'Daily Tasks',
+    title: '每日任务',
     date: '2024-01-16',
     color: THEME.colors.note.colors[1],
     folderId: 'work',
@@ -44,7 +44,7 @@ export const INITIAL_NOTES = [
   },
   {
     id: '3',
-    title: 'Random Thoughts',
+    title: '随机想法',
     date: '2024-01-17',
     color: THEME.colors.note.colors[2],
     folderId: 'personal',
@@ -58,15 +58,11 @@ export const INITIAL_NOTES = [
   },
   {
     id: '4',
-    title: 'Books to Read',
+    title: '书籍',
     date: '2024-01-18',
     color: THEME.colors.note.colors[3],
-    folderId: 'reading',
-    items: [
-      '"The Power of Habit" by Charles Duhigg',
-      '"Atomic Habits" by James Clear',
-      '"The Alchemist" by Paulo Coelho',
-    ],
+    folderId: 'books',
+    items: ['The Alchemist', 'The Power of Now', 'The Art of War'],
     createdAt: new Date('2024-01-18'),
     updatedAt: new Date('2024-01-18'),
   },

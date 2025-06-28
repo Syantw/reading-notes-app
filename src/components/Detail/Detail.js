@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { THEME } from '../../constants/theme';
 import { FOLDERS } from '../../data/mockData';
 
-const NoteDetail = ({ note, onSave, onClose, onDelete }) => {
+const Detail = ({ note, onSave, onClose, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     title: note?.title || '',
@@ -58,17 +58,22 @@ const NoteDetail = ({ note, onSave, onClose, onDelete }) => {
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000,
+    backdropFilter: 'blur(4px)',
+    animation: 'fadeIn 0.3s ease',
   };
 
   const modalStyle = {
     background: THEME.colors.sidebar.bg,
     borderRadius: THEME.borderRadius.large,
-    boxShadow: THEME.shadows.card,
+    boxShadow: THEME.shadows.modal,
     width: '90%',
     maxWidth: 600,
     maxHeight: '90vh',
     overflow: 'auto',
     position: 'relative',
+    transform: 'scale(1)',
+    transition: `transform ${THEME.transitions.normal}`,
+    animation: 'slideUp 0.3s ease',
   };
 
   const headerStyle = {
@@ -103,18 +108,23 @@ const NoteDetail = ({ note, onSave, onClose, onDelete }) => {
     ...buttonStyle,
     background: THEME.colors.text.primary,
     color: THEME.colors.text.white,
+    boxShadow: THEME.shadows.button,
+    transition: `all ${THEME.transitions.fast}`,
   };
 
   const secondaryButtonStyle = {
     ...buttonStyle,
     background: '#f0f0f0',
     color: THEME.colors.text.primary,
+    transition: `all ${THEME.transitions.fast}`,
   };
 
   const dangerButtonStyle = {
     ...buttonStyle,
-    background: '#ff4757',
+    background: THEME.colors.status.error,
     color: THEME.colors.text.white,
+    boxShadow: THEME.shadows.button,
+    transition: `all ${THEME.transitions.fast}`,
   };
 
   const inputStyle = {
@@ -353,7 +363,7 @@ const NoteDetail = ({ note, onSave, onClose, onDelete }) => {
   );
 };
 
-NoteDetail.propTypes = {
+Detail.propTypes = {
   note: PropTypes.shape({
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
@@ -369,4 +379,4 @@ NoteDetail.propTypes = {
   onDelete: PropTypes.func.isRequired,
 };
 
-export default NoteDetail;
+export default Detail;

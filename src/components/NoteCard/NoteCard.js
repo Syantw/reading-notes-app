@@ -15,12 +15,14 @@ const NoteCard = ({ note, onClick }) => {
     flexDirection: 'column',
     position: 'relative',
     cursor: 'pointer',
-    transition: 'transform 0.2s, box-shadow 0.2s',
+    transition: `transform ${THEME.transitions.normal}, box-shadow ${THEME.transitions.normal}, background-color ${THEME.transitions.fast}`,
+    border: '1px solid transparent',
   };
 
   const hoverStyle = {
-    transform: 'translateY(-2px)',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+    transform: 'translateY(-4px)',
+    boxShadow: THEME.shadows.cardHover,
+    border: '1px solid rgba(255,255,255,0.3)',
   };
 
   const titleStyle = {
@@ -59,6 +61,13 @@ const NoteCard = ({ note, onClick }) => {
     fontSize: 18,
     color: '#7ed957',
     cursor: 'pointer',
+    transition: `transform ${THEME.transitions.fast}, opacity ${THEME.transitions.fast}`,
+    opacity: 0.7,
+  };
+
+  const editIconHoverStyle = {
+    transform: 'scale(1.1)',
+    opacity: 1,
   };
 
   const formatDate = dateString => {
@@ -75,11 +84,21 @@ const NoteCard = ({ note, onClick }) => {
       style={cardStyle}
       onClick={onClick}
       onMouseEnter={e => {
-        Object.assign(e.target.style, hoverStyle);
+        Object.assign(e.currentTarget.style, hoverStyle);
+        const icon = e.currentTarget.querySelector('[data-edit-icon]');
+        if (icon) {
+          Object.assign(icon.style, editIconHoverStyle);
+        }
       }}
       onMouseLeave={e => {
-        e.target.style.transform = 'translateY(0)';
-        e.target.style.boxShadow = THEME.shadows.card;
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = THEME.shadows.card;
+        e.currentTarget.style.border = '1px solid transparent';
+        const icon = e.currentTarget.querySelector('[data-edit-icon]');
+        if (icon) {
+          icon.style.transform = 'scale(1)';
+          icon.style.opacity = '0.7';
+        }
       }}
     >
       <div style={titleStyle}>{note.title}</div>
@@ -96,7 +115,7 @@ const NoteCard = ({ note, onClick }) => {
           </li>
         )}
       </ul>
-      <span style={editIconStyle} title="View Details">
+      <span data-edit-icon style={editIconStyle} title="View Details">
         👁️
       </span>
     </div>
