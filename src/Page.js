@@ -692,8 +692,8 @@ function Page() {
                     cursor: "pointer",
                     transition: "background-color 0.2s",
                   }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = "#6bc946"}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = "#7ed957"}
+                  onMouseEnter={(e) => e.target.style.color = "#6bc946"}
+                  onMouseLeave={(e) => e.target.style.color = "#fff"}
                 >
                   📝 Add Note
                 </button>
