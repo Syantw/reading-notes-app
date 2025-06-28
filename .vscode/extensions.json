@@ -3,10 +3,10 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "ms-vscode.vscode-typescript-next",
-    "bradlc.vscode-tailwindcss",
     "formulahendry.auto-rename-tag",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-json",
     "christian-kohler.path-intellisense",
-    "ms-vscode.sublime-keybindings",
-    "PKief.material-icon-theme"
+    "eamodio.gitlens"
   ]
 } 
