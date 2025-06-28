@@ -1,187 +1,70 @@
-# ReadingNotes - 阅读笔记管理工具
+# Getting Started with Create React App
 
-一个现代化的阅读笔记管理应用，帮助用户更好地组织和追踪阅读进度。
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## ✨ 功能特性
+## Available Scripts
 
-### 📚 笔记管理
-- **多种笔记类型**：书籍笔记、文章笔记、视频笔记、播客笔记、思考笔记、研究笔记
-- **智能分类**：按文件夹自动分类（进行中、已完成、收藏夹、归档）
-- **进度追踪**：实时显示笔记完成进度
-- **标签系统**：支持多标签分类和搜索
+In the project directory, you can run:
 
-### 🎨 用户界面
-- **现代化设计**：简洁美观的界面设计
-- **响应式布局**：支持桌面和移动设备
-- **直观操作**：拖拽、点击等直观的交互方式
-- **主题色彩**：不同类型笔记使用不同颜色区分
+### `npm start`
 
-### 📊 统计分析
-- **阅读概览**：总笔记数、已完成、进行中等统计
-- **进度分析**：平均完成度可视化展示
-- **类型分布**：各类型笔记的分布情况
-- **月度趋势**：笔记创建的时间趋势
-- **热门标签**：最常用的标签云展示
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### 🔍 搜索与筛选
-- **全文搜索**：支持标题、作者、标签搜索
-- **智能筛选**：按文件夹、类型、进度筛选
-- **实时结果**：搜索结果实时更新
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-## 🚀 快速开始
+### `npm test`
 
-### 环境要求
-- Node.js 18.x 或更高版本
-- npm 或 pnpm 包管理器
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### 安装步骤
+### `npm run build`
 
-1. **克隆项目**
-```bash
-git clone https://github.com/Syantw/reading-notes-app.git
-cd reading-notes-app
-```
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-2. **安装依赖**
-```bash
-npm install
-# 或使用 pnpm
-pnpm install
-```
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-3. **启动开发服务器**
-```bash
-npm start
-# 或使用 pnpm
-pnpm start
-```
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-4. **访问应用**
-打开浏览器访问 `http://localhost:3000`
+### `npm run eject`
 
-## 📖 使用指南
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-### 创建笔记
-1. 点击左侧边栏的"创建笔记"按钮
-2. 填写笔记信息：
-   - 标题：笔记的标题
-   - 类型：选择笔记类型（书籍、文章、视频等）
-   - 作者：原作者或来源
-   - 日期：创建日期
-   - 标签：用逗号分隔多个标签
-   - 摘要：笔记的简要描述
-   - 内容：每行一个要点
-3. 点击"创建笔记"保存
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-### 管理笔记
-- **查看笔记**：点击笔记卡片查看详细信息
-- **编辑笔记**：在笔记详情页面点击"编辑"按钮
-- **更新进度**：在编辑模式下调整完成进度
-- **删除笔记**：在笔记详情页面删除（功能待实现）
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-### 使用统计功能
-1. 点击左侧边栏的"统计"按钮
-2. 查看各种统计图表：
-   - 总体概览
-   - 平均进度
-   - 类型分布
-   - 热门标签
-   - 月度趋势
-   - 最近活动
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-### 搜索和筛选
-- **搜索**：在搜索框中输入关键词
-- **文件夹筛选**：点击左侧文件夹列表
-- **类型筛选**：点击笔记类型图标
+## Learn More
 
-## 🛠️ 技术栈
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-- **前端框架**：React 18
-- **样式**：CSS3 + 现代布局技术
-- **状态管理**：React Hooks
-- **构建工具**：Create React App
-- **代码规范**：ESLint + Prettier
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-## 📁 项目结构
+### Code Splitting
 
-```
-src/
-├── components/          # 组件目录
-│   ├── NoteDetail.js    # 笔记详情组件
-│   ├── NoteDetail.css   # 笔记详情样式
-│   ├── Statistics.js    # 统计页面组件
-│   └── Statistics.css   # 统计页面样式
-├── App.js              # 主应用组件
-├── App.css             # 主应用样式
-└── index.js            # 应用入口
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-## 🎯 开发规范
+### Analyzing the Bundle Size
 
-### 代码风格
-- 使用 ESLint 进行代码检查
-- 使用 Prettier 进行代码格式化
-- 遵循 React 最佳实践
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### 组件设计
-- 函数式组件 + Hooks
-- 组件职责单一
-- 合理的 props 传递
+### Making a Progressive Web App
 
-### 样式规范
-- 使用 CSS 类名
-- 响应式设计
-- 统一的颜色主题
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-## 🔮 未来计划
+### Advanced Configuration
 
-### 即将推出的功能
-- [ ] 笔记导出功能（PDF、Markdown）
-- [ ] 笔记分享功能
-- [ ] 云端同步
-- [ ] 移动端应用
-- [ ] 笔记模板系统
-- [ ] 阅读目标设置
-- [ ] 笔记评论系统
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### 技术改进
-- [ ] 添加单元测试
-- [ ] 性能优化
-- [ ] PWA 支持
-- [ ] 国际化支持
+### Deployment
 
-## 🤝 贡献指南
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-欢迎提交 Issue 和 Pull Request！
+### `npm run build` fails to minify
 
-### 开发流程
-1. Fork 项目
-2. 创建功能分支
-3. 提交代码
-4. 创建 Pull Request
-
-### 代码提交规范
-- feat: 新功能
-- fix: 修复bug
-- docs: 文档更新
-- style: 代码格式调整
-- refactor: 代码重构
-- test: 测试相关
-- chore: 构建过程或辅助工具的变动
-
-## 📄 许可证
-
-MIT License
-
-## 👨‍💻 作者
-
-- **Syantw** - 初始开发者
-- 邮箱：syantw.1@sjtu.edu.cn
-
-## 🙏 致谢
-
-感谢所有为这个项目做出贡献的开发者！
-
----
-
-如果这个项目对你有帮助，请给个 ⭐️ 支持一下！
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
