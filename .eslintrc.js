@@ -4,12 +4,12 @@ module.exports = {
     browser: true,
     es2021: true,
     node: true,
-    jest: true,
   },
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
+    'prettier',
   ],
   parser: '@babel/eslint-parser',
   parserOptions: {
@@ -25,15 +25,12 @@ module.exports = {
   },
   plugins: ['react', 'react-hooks'],
   rules: {
-    'react/prop-types': 'off',
-    'react/jsx-uses-react': 'off',
-    'react/react-in-jsx-scope': 'off',
     'prefer-const': 'error',
     'no-var': 'error',
     'semi': ['error', 'always'],
-    'quotes': ['error', 'double'],
-    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    'no-console': 'warn',
+    'quotes': ['error', 'single'],
+    'react/prop-types': 'off', // We'll use TypeScript later
+    'react/react-in-jsx-scope': 'off', // Not needed in React 17+
   },
   settings: {
     react: {

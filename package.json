@@ -7,6 +7,8 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.19.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",
@@ -18,11 +20,16 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint src --ext .js,.jsx --fix",
-    "lint:check": "eslint src --ext .js,.jsx",
-    "format": "prettier --write src/**/*.{js,jsx,json,css,md}",
-    "format:check": "prettier --check src/**/*.{js,jsx,json,css,md}",
-    "quality": "npm run lint:check && npm run format:check"
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write src/",
+    "lint-check": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "format-check": "prettier --check src/"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -37,9 +44,10 @@
     ]
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.23.3",
-    "@babel/preset-react": "^7.23.3",
-    "eslint": "^8.57.0",
+    "@babel/eslint-parser": "^7.27.5",
+    "@babel/preset-react": "^7.27.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "prettier": "^3.6.2"
