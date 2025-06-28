@@ -1,218 +1,127 @@
 import React, { useState, useEffect } from 'react';
-import { theme, noteTypes } from '../styles/theme';
-import { getCurrentDate } from '../utils/dateUtils';
+import { theme } from '../styles/theme';
 
-const NoteForm = ({ note, onSubmit, onCancel, isEdit = false }) => {
-  const [form, setForm] = useState({
+const NoteForm = ({ note, onSubmit, onClose }) => {
+  const [formData, setFormData] = useState({
     title: '',
-    type: 'reading',
-    content: '',
-    date: getCurrentDate(),
-    tags: '',
     author: '',
-    director: '',
-    year: '',
-    rating: 0,
+    content: '',
+    type: 'book',
+    status: 'reading',
+    tags: [],
+    totalPages: '',
+    currentPage: '',
     progress: 0,
-    status: 'ongoing',
+    rating: 0
   });
+
+  const [tagInput, setTagInput] = useState('');
 
   useEffect(() => {
     if (note) {
-      setForm({
-        title: note.title || '',
-        type: note.type || 'reading',
-        content: note.content ? note.content.join('\n') : '',
-        date: note.date || getCurrentDate(),
-        tags: note.tags ? note.tags.join(', ') : '',
-        author: note.author || '',
-        director: note.director || '',
-        year: note.year || '',
-        rating: note.rating || 0,
-        progress: note.progress || 0,
-        status: note.status || 'ongoing',
+      setFormData({
+        ...note,
+        tags: note.tags || []
       });
     }
   }, [note]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleAddTag = () => {
+    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        tags: [...prev.tags, tagInput.trim()]
+      }));
+      setTagInput('');
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.filter(tag => tag !== tagToRemove)
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    if (!form.title.trim() || !form.content.trim()) {
-      alert('请填写标题和内容');
+    if (!formData.title.trim()) {
+      alert('请输入笔记标题');
       return;
     }
 
-    const noteData = {
-      title: form.title.trim(),
-      type: form.type,
-      content: form.content.split('\n').filter(line => line.trim()),
-      date: form.date,
-      tags: form.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-      status: form.status,
-      rating: parseInt(form.rating) || 0,
-      progress: parseInt(form.progress) || 0,
+    const submitData = {
+      ...formData,
+      id: note?.id,
+      progress: parseInt(formData.progress) || 0,
+      rating: parseInt(formData.rating) || 0,
+      totalPages: parseInt(formData.totalPages) || 0,
+      currentPage: parseInt(formData.currentPage) || 0
     };
 
-    // 根据笔记类型添加特定字段
-    if (form.type === 'reading' && form.author) {
-      noteData.author = form.author.trim();
-    }
-    if (form.type === 'watching' && form.director) {
-      noteData.director = form.director.trim();
-      if (form.year) {
-        noteData.year = parseInt(form.year);
-      }
-    }
-    if (form.type === 'listening' && form.author) {
-      noteData.author = form.author.trim();
-    }
-
-    onSubmit(noteData);
+    onSubmit(submitData);
   };
 
-  const getTypeSpecificFields = () => {
-    switch (form.type) {
-      case 'reading':
-        return (
-          <div style={{ marginBottom: theme.spacing[4] }}>
-            <label style={labelStyle}>作者</label>
-            <input
-              name="author"
-              value={form.author}
-              onChange={handleChange}
-              placeholder="例如：沈复"
-              style={inputStyle}
-            />
-          </div>
-        );
-      case 'watching':
-        return (
-          <>
-            <div style={{ marginBottom: theme.spacing[4] }}>
-              <label style={labelStyle}>导演</label>
-              <input
-                name="director"
-                value={form.director}
-                onChange={handleChange}
-                placeholder="例如：弗兰克·德拉邦特"
-                style={inputStyle}
-              />
-            </div>
-            <div style={{ marginBottom: theme.spacing[4] }}>
-              <label style={labelStyle}>年份</label>
-              <input
-                name="year"
-                type="number"
-                value={form.year}
-                onChange={handleChange}
-                placeholder="例如：1994"
-                style={inputStyle}
-              />
-            </div>
-          </>
-        );
-      case 'listening':
-        return (
-          <div style={{ marginBottom: theme.spacing[4] }}>
-            <label style={labelStyle}>作者/主播</label>
-            <input
-              name="author"
-              value={form.author}
-              onChange={handleChange}
-              placeholder="例如：罗振宇"
-              style={inputStyle}
-            />
-          </div>
-        );
-      default:
-        return null;
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddTag();
     }
-  };
-
-  const labelStyle = {
-    display: 'block',
-    marginBottom: theme.spacing[2],
-    fontWeight: 600,
-    fontSize: theme.fontSize.sm,
-    color: theme.colors.text.primary,
-  };
-
-  const inputStyle = {
-    width: '100%',
-    padding: `${theme.spacing[2]} ${theme.spacing[3]}`,
-    border: `1px solid ${theme.colors.secondary[200]}`,
-    borderRadius: theme.borderRadius.md,
-    fontSize: theme.fontSize.sm,
-    background: theme.colors.background.card,
-    color: theme.colors.text.primary,
-    outline: 'none',
-    transition: 'border-color 0.2s ease',
-  };
-
-  const selectStyle = {
-    ...inputStyle,
-    cursor: 'pointer',
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        background: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000,
-        padding: theme.spacing[4],
-      }}
-    >
-      <div
-        style={{
-          background: theme.colors.background.modal,
-          borderRadius: theme.borderRadius.xl,
-          boxShadow: theme.shadows.xl,
-          padding: theme.spacing[8],
-          maxWidth: 600,
-          width: '100%',
-          maxHeight: '90vh',
-          overflow: 'auto',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: theme.spacing[6],
-          }}
-        >
-          <h2 style={{ 
-            margin: 0, 
-            fontWeight: 700, 
-            fontSize: theme.fontSize['2xl'],
-            color: theme.colors.text.primary,
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000
+    }}>
+      <div style={{
+        background: theme.colors.white,
+        borderRadius: '12px',
+        padding: '24px',
+        width: '90%',
+        maxWidth: '600px',
+        maxHeight: '90vh',
+        overflow: 'auto',
+        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '24px'
+        }}>
+          <h2 style={{
+            fontSize: '24px',
+            fontWeight: 'bold',
+            color: theme.colors.text,
+            margin: 0
           }}>
-            {isEdit ? '编辑笔记' : '创建新笔记'}
+            {note ? '编辑笔记' : '创建新笔记'}
           </h2>
           <button
-            onClick={onCancel}
+            onClick={onClose}
             style={{
               background: 'none',
               border: 'none',
               fontSize: '24px',
               cursor: 'pointer',
-              color: theme.colors.text.muted,
-              padding: theme.spacing[1],
+              color: theme.colors.textSecondary,
+              padding: '4px'
             }}
           >
             ✕
@@ -220,149 +129,401 @@ const NoteForm = ({ note, onSubmit, onCancel, isEdit = false }) => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* 笔记类型 */}
-          <div style={{ marginBottom: theme.spacing[4] }}>
-            <label style={labelStyle}>笔记类型</label>
-            <select
-              name="type"
-              value={form.type}
-              onChange={handleChange}
-              style={selectStyle}
-            >
-              {Object.entries(noteTypes).map(([key, type]) => (
-                <option key={key} value={key}>
-                  {type.icon} {type.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <div style={{ display: 'grid', gap: '20px' }}>
+            {/* 标题 */}
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: theme.colors.text,
+                marginBottom: '8px'
+              }}>
+                标题 *
+              </label>
+              <input
+                type="text"
+                value={formData.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: `1px solid ${theme.colors.border}`,
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  backgroundColor: theme.colors.white
+                }}
+                placeholder="输入笔记标题"
+                required
+              />
+            </div>
 
-          {/* 标题 */}
-          <div style={{ marginBottom: theme.spacing[4] }}>
-            <label style={labelStyle}>标题 *</label>
-            <input
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="例如：《浮生六记》读书笔记"
-              style={inputStyle}
-              required
-            />
-          </div>
+            {/* 作者 */}
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: theme.colors.text,
+                marginBottom: '8px'
+              }}>
+                作者
+              </label>
+              <input
+                type="text"
+                value={formData.author}
+                onChange={(e) => handleInputChange('author', e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: `1px solid ${theme.colors.border}`,
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  backgroundColor: theme.colors.white
+                }}
+                placeholder="输入作者姓名"
+              />
+            </div>
 
-          {/* 日期 */}
-          <div style={{ marginBottom: theme.spacing[4] }}>
-            <label style={labelStyle}>日期</label>
-            <input
-              name="date"
-              type="date"
-              value={form.date}
-              onChange={handleChange}
-              style={inputStyle}
-            />
-          </div>
+            {/* 类型和状态 */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: theme.colors.text,
+                  marginBottom: '8px'
+                }}>
+                  类型
+                </label>
+                <select
+                  value={formData.type}
+                  onChange={(e) => handleInputChange('type', e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: `1px solid ${theme.colors.border}`,
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    backgroundColor: theme.colors.white,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="book">📚 书籍</option>
+                  <option value="article">📄 文章</option>
+                  <option value="paper">📝 论文</option>
+                  <option value="video">🎥 视频</option>
+                  <option value="podcast">🎧 播客</option>
+                </select>
+              </div>
 
-          {/* 类型特定字段 */}
-          {getTypeSpecificFields()}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: theme.colors.text,
+                  marginBottom: '8px'
+                }}>
+                  状态
+                </label>
+                <select
+                  value={formData.status}
+                  onChange={(e) => handleInputChange('status', e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: `1px solid ${theme.colors.border}`,
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    backgroundColor: theme.colors.white,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="reading">阅读中</option>
+                  <option value="completed">已完成</option>
+                  <option value="paused">暂停</option>
+                </select>
+              </div>
+            </div>
 
-          {/* 状态 */}
-          <div style={{ marginBottom: theme.spacing[4] }}>
-            <label style={labelStyle}>状态</label>
-            <select
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-              style={selectStyle}
-            >
-              <option value="ongoing">进行中</option>
-              <option value="completed">已完成</option>
-              <option value="draft">草稿</option>
-            </select>
-          </div>
+            {/* 页面信息 */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: theme.colors.text,
+                  marginBottom: '8px'
+                }}>
+                  总页数
+                </label>
+                <input
+                  type="number"
+                  value={formData.totalPages}
+                  onChange={(e) => handleInputChange('totalPages', e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: `1px solid ${theme.colors.border}`,
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    backgroundColor: theme.colors.white
+                  }}
+                  placeholder="0"
+                  min="0"
+                />
+              </div>
 
-          {/* 进度 */}
-          <div style={{ marginBottom: theme.spacing[4] }}>
-            <label style={labelStyle}>进度 (%)</label>
-            <input
-              name="progress"
-              type="number"
-              min="0"
-              max="100"
-              value={form.progress}
-              onChange={handleChange}
-              style={inputStyle}
-            />
-          </div>
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: theme.colors.text,
+                  marginBottom: '8px'
+                }}>
+                  当前页数
+                </label>
+                <input
+                  type="number"
+                  value={formData.currentPage}
+                  onChange={(e) => handleInputChange('currentPage', e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: `1px solid ${theme.colors.border}`,
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    backgroundColor: theme.colors.white
+                  }}
+                  placeholder="0"
+                  min="0"
+                />
+              </div>
+            </div>
 
-          {/* 评分 */}
-          <div style={{ marginBottom: theme.spacing[4] }}>
-            <label style={labelStyle}>评分</label>
-            <select
-              name="rating"
-              value={form.rating}
-              onChange={handleChange}
-              style={selectStyle}
-            >
-              <option value="0">未评分</option>
-              <option value="1">⭐ 1星</option>
-              <option value="2">⭐⭐ 2星</option>
-              <option value="3">⭐⭐⭐ 3星</option>
-              <option value="4">⭐⭐⭐⭐ 4星</option>
-              <option value="5">⭐⭐⭐⭐⭐ 5星</option>
-            </select>
-          </div>
+            {/* 进度 */}
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: theme.colors.text,
+                marginBottom: '8px'
+              }}>
+                进度 (%)
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={formData.progress}
+                onChange={(e) => handleInputChange('progress', e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '6px',
+                  borderRadius: '3px',
+                  background: theme.colors.border,
+                  outline: 'none'
+                }}
+              />
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: '12px',
+                color: theme.colors.textSecondary,
+                marginTop: '4px'
+              }}>
+                <span>0%</span>
+                <span>{formData.progress}%</span>
+                <span>100%</span>
+              </div>
+            </div>
 
-          {/* 标签 */}
-          <div style={{ marginBottom: theme.spacing[4] }}>
-            <label style={labelStyle}>标签</label>
-            <input
-              name="tags"
-              value={form.tags}
-              onChange={handleChange}
-              placeholder="用逗号分隔，例如：古典文学, 生活随笔, 爱情"
-              style={inputStyle}
-            />
-          </div>
+            {/* 评分 */}
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: theme.colors.text,
+                marginBottom: '8px'
+              }}>
+                评分
+              </label>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => handleInputChange('rating', star)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '24px',
+                      color: star <= formData.rating ? '#F59E0B' : theme.colors.border,
+                      padding: '4px'
+                    }}
+                  >
+                    ⭐
+                  </button>
+                ))}
+                <span style={{
+                  fontSize: '14px',
+                  color: theme.colors.textSecondary,
+                  marginLeft: '8px'
+                }}>
+                  ({formData.rating}/5)
+                </span>
+              </div>
+            </div>
 
-          {/* 内容 */}
-          <div style={{ marginBottom: theme.spacing[6] }}>
-            <label style={labelStyle}>内容 *</label>
-            <textarea
-              name="content"
-              value={form.content}
-              onChange={handleChange}
-              placeholder="每行一个要点，例如：&#10;沈复与芸娘的伉俪情深令人动容&#10;书中对生活细节的描写非常细腻&#10;体现了清代文人的生活情趣和审美追求"
-              style={{
-                ...inputStyle,
-                minHeight: '120px',
-                resize: 'vertical',
-                fontFamily: theme.fonts.sans,
-              }}
-              required
-            />
+            {/* 标签 */}
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: theme.colors.text,
+                marginBottom: '8px'
+              }}>
+                标签
+              </label>
+              <div style={{
+                display: 'flex',
+                gap: '8px',
+                marginBottom: '8px'
+              }}>
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    border: `1px solid ${theme.colors.border}`,
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    backgroundColor: theme.colors.white
+                  }}
+                  placeholder="输入标签后按回车添加"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddTag}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.white,
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                  }}
+                >
+                  添加
+                </button>
+              </div>
+              {formData.tags.length > 0 && (
+                <div style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '6px'
+                }}>
+                  {formData.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      style={{
+                        padding: '4px 8px',
+                        backgroundColor: theme.colors.primary + '20',
+                        color: theme.colors.primary,
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveTag(tag)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          color: theme.colors.primary,
+                          padding: '0',
+                          marginLeft: '4px'
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 内容 */}
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: theme.colors.text,
+                marginBottom: '8px'
+              }}>
+                笔记内容
+              </label>
+              <textarea
+                value={formData.content}
+                onChange={(e) => handleInputChange('content', e.target.value)}
+                style={{
+                  width: '100%',
+                  minHeight: '120px',
+                  padding: '12px',
+                  border: `1px solid ${theme.colors.border}`,
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  backgroundColor: theme.colors.white,
+                  resize: 'vertical',
+                  fontFamily: 'inherit'
+                }}
+                placeholder="记录你的阅读笔记..."
+              />
+            </div>
           </div>
 
           {/* 按钮 */}
-          <div
-            style={{
-              display: 'flex',
-              gap: theme.spacing[3],
-              justifyContent: 'flex-end',
-            }}
-          >
+          <div style={{
+            display: 'flex',
+            gap: '12px',
+            justifyContent: 'flex-end',
+            marginTop: '24px',
+            paddingTop: '20px',
+            borderTop: `1px solid ${theme.colors.border}`
+          }}>
             <button
               type="button"
-              onClick={onCancel}
+              onClick={onClose}
               style={{
-                padding: `${theme.spacing[2]} ${theme.spacing[4]}`,
-                border: `1px solid ${theme.colors.secondary[200]}`,
-                borderRadius: theme.borderRadius.md,
-                background: theme.colors.background.card,
-                color: theme.colors.text.secondary,
-                fontWeight: 600,
+                padding: '12px 24px',
+                backgroundColor: 'transparent',
+                color: theme.colors.textSecondary,
+                border: `1px solid ${theme.colors.border}`,
+                borderRadius: '8px',
                 cursor: 'pointer',
-                fontSize: theme.fontSize.sm,
-                transition: 'all 0.2s ease',
+                fontSize: '16px',
+                fontWeight: '600'
               }}
             >
               取消
@@ -370,18 +531,17 @@ const NoteForm = ({ note, onSubmit, onCancel, isEdit = false }) => {
             <button
               type="submit"
               style={{
-                padding: `${theme.spacing[2]} ${theme.spacing[4]}`,
+                padding: '12px 24px',
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.white,
                 border: 'none',
-                borderRadius: theme.borderRadius.md,
-                background: `linear-gradient(135deg, ${theme.colors.primary[500]} 0%, ${theme.colors.primary[600]} 100%)`,
-                color: theme.colors.text.inverse,
-                fontWeight: 600,
+                borderRadius: '8px',
                 cursor: 'pointer',
-                fontSize: theme.fontSize.sm,
-                transition: 'all 0.2s ease',
+                fontSize: '16px',
+                fontWeight: '600'
               }}
             >
-              {isEdit ? '保存修改' : '创建笔记'}
+              {note ? '更新笔记' : '创建笔记'}
             </button>
           </div>
         </form>

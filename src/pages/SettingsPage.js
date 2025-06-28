@@ -1,442 +1,279 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useAppState } from '../App';
+import Sidebar from '../components/Sidebar';
 import { theme } from '../styles/theme';
 
 const SettingsPage = () => {
-  const [settings, setSettings] = useState({
-    theme: 'light',
-    language: 'zh-CN',
-    autoSave: true,
-    notifications: true,
-    exportFormat: 'json',
-    backupEnabled: true,
-  });
+  const { state, dispatch } = useAppState();
 
-  const handleSettingChange = (key, value) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+  const handleThemeChange = (newTheme) => {
+    dispatch({ type: 'SET_THEME', payload: newTheme });
   };
 
-  const SettingItem = ({ title, description, children }) => (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: `${theme.spacing[4]} 0`,
-        borderBottom: `1px solid ${theme.colors.secondary[100]}`,
-      }}
-    >
-      <div style={{ flex: 1 }}>
-        <div
-          style={{
-            fontSize: theme.fontSize.lg,
-            fontWeight: 600,
-            color: theme.colors.text.primary,
-            marginBottom: theme.spacing[1],
-          }}
-        >
-          {title}
-        </div>
-        <div
-          style={{
-            fontSize: theme.fontSize.sm,
-            color: theme.colors.text.secondary,
-          }}
-        >
-          {description}
-        </div>
-      </div>
-      <div style={{ marginLeft: theme.spacing[4] }}>
-        {children}
-      </div>
+  const handleExportData = () => {
+    const dataStr = JSON.stringify(state.notes, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `reading-notes-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportData = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importedNotes = JSON.parse(e.target.result);
+          if (Array.isArray(importedNotes)) {
+            dispatch({ type: 'SET_NOTES', payload: importedNotes });
+            alert('数据导入成功！');
+          } else {
+            alert('文件格式不正确，请选择有效的JSON文件。');
+          }
+        } catch (error) {
+          alert('文件解析失败，请检查文件格式。');
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const handleClearData = () => {
+    if (window.confirm('确定要清空所有数据吗？此操作不可恢复！')) {
+      dispatch({ type: 'SET_NOTES', payload: [] });
+      alert('数据已清空！');
+    }
+  };
+
+  const SettingSection = ({ title, children }) => (
+    <div style={{
+      background: theme.colors.white,
+      padding: '24px',
+      borderRadius: '12px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+      border: `1px solid ${theme.colors.border}`,
+      marginBottom: '20px'
+    }}>
+      <h3 style={{
+        fontSize: '18px',
+        fontWeight: 'bold',
+        color: theme.colors.text,
+        margin: '0 0 20px 0'
+      }}>
+        {title}
+      </h3>
+      {children}
     </div>
   );
 
-  const Switch = ({ checked, onChange }) => (
-    <button
-      style={{
-        width: 48,
-        height: 24,
-        borderRadius: 12,
-        border: 'none',
-        background: checked ? theme.colors.primary[500] : theme.colors.secondary[300],
-        cursor: 'pointer',
-        position: 'relative',
-        transition: 'background-color 0.2s ease',
-      }}
-      onClick={() => onChange(!checked)}
-    >
-      <div
-        style={{
-          width: 20,
-          height: 20,
-          borderRadius: '50%',
-          background: theme.colors.background.card,
-          position: 'absolute',
-          top: 2,
-          left: checked ? 26 : 2,
-          transition: 'left 0.2s ease',
-          boxShadow: theme.shadows.sm,
-        }}
-      />
-    </button>
-  );
-
-  const Select = ({ value, onChange, options }) => (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      style={{
-        padding: `${theme.spacing[2]} ${theme.spacing[3]}`,
-        border: `1px solid ${theme.colors.secondary[200]}`,
-        borderRadius: theme.borderRadius.md,
-        fontSize: theme.fontSize.sm,
-        background: theme.colors.background.card,
-        color: theme.colors.text.primary,
-        cursor: 'pointer',
-        outline: 'none',
-        minWidth: 120,
-      }}
-    >
-      {options.map(([key, label]) => (
-        <option key={key} value={key}>
-          {label}
-        </option>
-      ))}
-    </select>
+  const SettingItem = ({ label, children }) => (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '12px 0',
+      borderBottom: `1px solid ${theme.colors.border}`
+    }}>
+      <span style={{
+        fontSize: '14px',
+        fontWeight: '600',
+        color: theme.colors.text
+      }}>
+        {label}
+      </span>
+      {children}
+    </div>
   );
 
   return (
-    <div
-      style={{
-        background: theme.colors.background.main,
-        minHeight: '100vh',
-        fontFamily: theme.fonts.sans,
-        padding: theme.spacing[8],
-      }}
-    >
-      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      <Sidebar />
+      
+      <main style={{
+        flex: 1,
+        marginLeft: '250px',
+        padding: '20px',
+        backgroundColor: theme.colors.background,
+        minHeight: '100vh'
+      }}>
         {/* 头部 */}
-        <div style={{ marginBottom: theme.spacing[8] }}>
-          <h1
-            style={{
-              fontWeight: 700,
-              fontSize: theme.fontSize['3xl'],
-              color: theme.colors.text.primary,
-              margin: 0,
-              marginBottom: theme.spacing[2],
-            }}
-          >
+        <div style={{
+          marginBottom: '30px',
+          paddingBottom: '20px',
+          borderBottom: `1px solid ${theme.colors.border}`
+        }}>
+          <h1 style={{
+            fontSize: '28px',
+            fontWeight: 'bold',
+            color: theme.colors.text,
+            margin: '0 0 8px 0'
+          }}>
             设置
           </h1>
-          <p
-            style={{
-              fontSize: theme.fontSize.lg,
-              color: theme.colors.text.secondary,
-              margin: 0,
-            }}
-          >
+          <p style={{
+            fontSize: '16px',
+            color: theme.colors.textSecondary,
+            margin: 0
+          }}>
             个性化你的阅读笔记体验
           </p>
         </div>
 
-        {/* 设置卡片 */}
-        <div
-          style={{
-            background: theme.colors.background.card,
-            borderRadius: theme.borderRadius.xl,
-            boxShadow: theme.shadows.md,
-            border: `1px solid ${theme.colors.secondary[100]}`,
-            overflow: 'hidden',
-          }}
-        >
-          {/* 外观设置 */}
-          <div style={{ padding: theme.spacing[6] }}>
-            <h2
-              style={{
-                fontSize: theme.fontSize.xl,
-                fontWeight: 700,
-                color: theme.colors.text.primary,
-                margin: 0,
-                marginBottom: theme.spacing[6],
-              }}
-            >
-              🎨 外观设置
-            </h2>
-
-            <SettingItem
-              title="主题模式"
-              description="选择你喜欢的界面主题"
-            >
-              <Select
-                value={settings.theme}
-                onChange={(value) => handleSettingChange('theme', value)}
-                options={[
-                  ['light', '浅色模式'],
-                  ['dark', '深色模式'],
-                  ['auto', '跟随系统'],
-                ]}
-              />
-            </SettingItem>
-
-            <SettingItem
-              title="语言"
-              description="选择应用界面语言"
-            >
-              <Select
-                value={settings.language}
-                onChange={(value) => handleSettingChange('language', value)}
-                options={[
-                  ['zh-CN', '简体中文'],
-                  ['en-US', 'English'],
-                  ['ja-JP', '日本語'],
-                ]}
-              />
-            </SettingItem>
-          </div>
-
-          {/* 功能设置 */}
-          <div style={{ padding: theme.spacing[6], borderTop: `1px solid ${theme.colors.secondary[100]}` }}>
-            <h2
-              style={{
-                fontSize: theme.fontSize.xl,
-                fontWeight: 700,
-                color: theme.colors.text.primary,
-                margin: 0,
-                marginBottom: theme.spacing[6],
-              }}
-            >
-              ⚙️ 功能设置
-            </h2>
-
-            <SettingItem
-              title="自动保存"
-              description="编辑笔记时自动保存更改"
-            >
-              <Switch
-                checked={settings.autoSave}
-                onChange={(value) => handleSettingChange('autoSave', value)}
-              />
-            </SettingItem>
-
-            <SettingItem
-              title="通知提醒"
-              description="接收阅读进度和提醒通知"
-            >
-              <Switch
-                checked={settings.notifications}
-                onChange={(value) => handleSettingChange('notifications', value)}
-              />
-            </SettingItem>
-
-            <SettingItem
-              title="自动备份"
-              description="定期备份你的笔记数据"
-            >
-              <Switch
-                checked={settings.backupEnabled}
-                onChange={(value) => handleSettingChange('backupEnabled', value)}
-              />
-            </SettingItem>
-          </div>
-
-          {/* 数据管理 */}
-          <div style={{ padding: theme.spacing[6], borderTop: `1px solid ${theme.colors.secondary[100]}` }}>
-            <h2
-              style={{
-                fontSize: theme.fontSize.xl,
-                fontWeight: 700,
-                color: theme.colors.text.primary,
-                margin: 0,
-                marginBottom: theme.spacing[6],
-              }}
-            >
-              📊 数据管理
-            </h2>
-
-            <SettingItem
-              title="导出格式"
-              description="选择笔记导出时的文件格式"
-            >
-              <Select
-                value={settings.exportFormat}
-                onChange={(value) => handleSettingChange('exportFormat', value)}
-                options={[
-                  ['json', 'JSON 格式'],
-                  ['markdown', 'Markdown 格式'],
-                  ['txt', '纯文本格式'],
-                  ['csv', 'CSV 格式'],
-                ]}
-              />
-            </SettingItem>
-
-            <div style={{ padding: `${theme.spacing[4]} 0` }}>
-              <div
+        {/* 外观设置 */}
+        <SettingSection title="外观设置">
+          <SettingItem label="主题模式">
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={() => handleThemeChange('light')}
                 style={{
-                  fontSize: theme.fontSize.lg,
-                  fontWeight: 600,
-                  color: theme.colors.text.primary,
-                  marginBottom: theme.spacing[1],
+                  padding: '8px 16px',
+                  border: `2px solid ${state.theme === 'light' ? theme.colors.primary : theme.colors.border}`,
+                  borderRadius: '6px',
+                  backgroundColor: state.theme === 'light' ? theme.colors.primary : 'transparent',
+                  color: state.theme === 'light' ? theme.colors.white : theme.colors.text,
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '600'
                 }}
               >
-                数据操作
-              </div>
-              <div
+                浅色模式
+              </button>
+              <button
+                onClick={() => handleThemeChange('dark')}
                 style={{
-                  fontSize: theme.fontSize.sm,
-                  color: theme.colors.text.secondary,
-                  marginBottom: theme.spacing[4],
+                  padding: '8px 16px',
+                  border: `2px solid ${state.theme === 'dark' ? theme.colors.primary : theme.colors.border}`,
+                  borderRadius: '6px',
+                  backgroundColor: state.theme === 'dark' ? theme.colors.primary : 'transparent',
+                  color: state.theme === 'dark' ? theme.colors.white : theme.colors.text,
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '600'
                 }}
               >
-                管理你的笔记数据
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  gap: theme.spacing[3],
-                  flexWrap: 'wrap',
-                }}
-              >
-                <button
-                  style={{
-                    padding: `${theme.spacing[2]} ${theme.spacing[4]}`,
-                    border: `1px solid ${theme.colors.primary[500]}`,
-                    borderRadius: theme.borderRadius.md,
-                    background: 'transparent',
-                    color: theme.colors.primary[600],
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    fontSize: theme.fontSize.sm,
-                    transition: 'all 0.2s ease',
-                  }}
-                  onClick={() => alert('导出功能开发中...')}
-                >
-                  📤 导出笔记
-                </button>
-                <button
-                  style={{
-                    padding: `${theme.spacing[2]} ${theme.spacing[4]}`,
-                    border: `1px solid ${theme.colors.secondary[300]}`,
-                    borderRadius: theme.borderRadius.md,
-                    background: 'transparent',
-                    color: theme.colors.text.secondary,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    fontSize: theme.fontSize.sm,
-                    transition: 'all 0.2s ease',
-                  }}
-                  onClick={() => alert('导入功能开发中...')}
-                >
-                  📥 导入笔记
-                </button>
-                <button
-                  style={{
-                    padding: `${theme.spacing[2]} ${theme.spacing[4]}`,
-                    border: `1px solid ${theme.colors.status.error}`,
-                    borderRadius: theme.borderRadius.md,
-                    background: 'transparent',
-                    color: theme.colors.status.error,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    fontSize: theme.fontSize.sm,
-                    transition: 'all 0.2s ease',
-                  }}
-                  onClick={() => {
-                    if (window.confirm('确定要清空所有笔记吗？此操作不可恢复！')) {
-                      alert('清空功能开发中...');
-                    }
-                  }}
-                >
-                  🗑️ 清空数据
-                </button>
-              </div>
+                深色模式
+              </button>
             </div>
-          </div>
+          </SettingItem>
+        </SettingSection>
 
-          {/* 关于 */}
-          <div style={{ padding: theme.spacing[6], borderTop: `1px solid ${theme.colors.secondary[100]}` }}>
-            <h2
+        {/* 数据管理 */}
+        <SettingSection title="数据管理">
+          <SettingItem label="导出数据">
+            <button
+              onClick={handleExportData}
               style={{
-                fontSize: theme.fontSize.xl,
-                fontWeight: 700,
-                color: theme.colors.text.primary,
-                margin: 0,
-                marginBottom: theme.spacing[6],
+                padding: '8px 16px',
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.white,
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600'
               }}
             >
-              ℹ️ 关于
-            </h2>
-
-            <div
+              导出JSON
+            </button>
+          </SettingItem>
+          
+          <SettingItem label="导入数据">
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImportData}
+              style={{ display: 'none' }}
+              id="import-file"
+            />
+            <label
+              htmlFor="import-file"
               style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: `${theme.spacing[4]} 0`,
+                padding: '8px 16px',
+                backgroundColor: theme.colors.accent,
+                color: theme.colors.white,
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600',
+                display: 'inline-block'
               }}
             >
-              <div>
-                <div
-                  style={{
-                    fontSize: theme.fontSize.lg,
-                    fontWeight: 600,
-                    color: theme.colors.text.primary,
-                    marginBottom: theme.spacing[1],
-                  }}
-                >
-                  阅读笔记
-                </div>
-                <div
-                  style={{
-                    fontSize: theme.fontSize.sm,
-                    color: theme.colors.text.secondary,
-                  }}
-                >
-                  版本 1.0.0
-                </div>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  gap: theme.spacing[3],
-                }}
-              >
-                <button
-                  style={{
-                    padding: `${theme.spacing[2]} ${theme.spacing[4]}`,
-                    border: `1px solid ${theme.colors.secondary[300]}`,
-                    borderRadius: theme.borderRadius.md,
-                    background: 'transparent',
-                    color: theme.colors.text.secondary,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    fontSize: theme.fontSize.sm,
-                    transition: 'all 0.2s ease',
-                  }}
-                  onClick={() => alert('帮助文档开发中...')}
-                >
-                  📖 帮助文档
-                </button>
-                <button
-                  style={{
-                    padding: `${theme.spacing[2]} ${theme.spacing[4]}`,
-                    border: `1px solid ${theme.colors.secondary[300]}`,
-                    borderRadius: theme.borderRadius.md,
-                    background: 'transparent',
-                    color: theme.colors.text.secondary,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    fontSize: theme.fontSize.sm,
-                    transition: 'all 0.2s ease',
-                  }}
-                  onClick={() => alert('反馈功能开发中...')}
-                >
-                  💬 意见反馈
-                </button>
-              </div>
-            </div>
+              选择文件
+            </label>
+          </SettingItem>
+          
+          <SettingItem label="清空数据">
+            <button
+              onClick={handleClearData}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#EF4444',
+                color: theme.colors.white,
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600'
+              }}
+            >
+              清空所有数据
+            </button>
+          </SettingItem>
+        </SettingSection>
+
+        {/* 应用信息 */}
+        <SettingSection title="应用信息">
+          <SettingItem label="当前版本">
+            <span style={{ fontSize: '14px', color: theme.colors.textSecondary }}>
+              1.0.0
+            </span>
+          </SettingItem>
+          
+          <SettingItem label="笔记总数">
+            <span style={{ fontSize: '14px', color: theme.colors.textSecondary }}>
+              {state.notes.length} 篇
+            </span>
+          </SettingItem>
+          
+          <SettingItem label="最后更新">
+            <span style={{ fontSize: '14px', color: theme.colors.textSecondary }}>
+              {new Date().toLocaleDateString('zh-CN')}
+            </span>
+          </SettingItem>
+        </SettingSection>
+
+        {/* 使用说明 */}
+        <SettingSection title="使用说明">
+          <div style={{
+            fontSize: '14px',
+            color: theme.colors.textSecondary,
+            lineHeight: '1.6'
+          }}>
+            <p style={{ margin: '0 0 12px 0' }}>
+              <strong>创建笔记：</strong>点击侧边栏的"创建笔记"按钮，填写笔记信息并保存。
+            </p>
+            <p style={{ margin: '0 0 12px 0' }}>
+              <strong>编辑笔记：</strong>点击笔记卡片上的编辑按钮，修改笔记内容。
+            </p>
+            <p style={{ margin: '0 0 12px 0' }}>
+              <strong>搜索过滤：</strong>在首页使用搜索框和过滤器快速找到需要的笔记。
+            </p>
+            <p style={{ margin: '0 0 12px 0' }}>
+              <strong>查看统计：</strong>在统计页面查看你的阅读进度和习惯分析。
+            </p>
+            <p style={{ margin: 0 }}>
+              <strong>数据备份：</strong>定期导出数据以备份你的阅读笔记。
+            </p>
           </div>
-        </div>
-      </div>
+        </SettingSection>
+      </main>
     </div>
   );
 };

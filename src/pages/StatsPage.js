@@ -1,484 +1,384 @@
-import React from 'react';
-import { theme, noteTypes } from '../styles/theme';
-import { useNotes } from '../hooks/useNotes';
+import React, { useMemo } from 'react';
+import { useAppState } from '../App';
+import Sidebar from '../components/Sidebar';
+import { theme } from '../styles/theme';
+import { formatDate } from '../utils/dateUtils';
 
 const StatsPage = () => {
-  const { allNotes, getStats } = useNotes();
-  const stats = getStats();
+  const { state } = useAppState();
 
-  // 计算月度统计
-  const getMonthlyStats = () => {
-    const months = {};
-    const now = new Date();
+  // 计算统计数据
+  const stats = useMemo(() => {
+    const total = state.notes.length;
+    const completed = state.notes.filter(note => note.status === 'completed').length;
+    const reading = state.notes.filter(note => note.status === 'reading').length;
+    const paused = state.notes.filter(note => note.status === 'paused').length;
     
-    allNotes.forEach(note => {
-      const noteDate = new Date(note.date);
-      const monthKey = `${noteDate.getFullYear()}-${String(noteDate.getMonth() + 1).padStart(2, '0')}`;
-      
-      if (!months[monthKey]) {
-        months[monthKey] = {
-          total: 0,
-          completed: 0,
-          ongoing: 0,
-          types: {}
-        };
-      }
-      
-      months[monthKey].total++;
-      months[monthKey][note.status]++;
-      
-      if (!months[monthKey].types[note.type]) {
-        months[monthKey].types[note.type] = 0;
-      }
-      months[monthKey].types[note.type]++;
+    const totalPages = state.notes.reduce((sum, note) => sum + (note.totalPages || 0), 0);
+    const readPages = state.notes.reduce((sum, note) => sum + (note.currentPage || 0), 0);
+    const avgRating = total > 0 ? (state.notes.reduce((sum, note) => sum + note.rating, 0) / total).toFixed(1) : 0;
+    
+    const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const readingProgress = totalPages > 0 ? Math.round((readPages / totalPages) * 100) : 0;
+
+    // 按月份统计
+    const monthlyStats = {};
+    state.notes.forEach(note => {
+      const month = new Date(note.createdAt).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' });
+      monthlyStats[month] = (monthlyStats[month] || 0) + 1;
     });
-    
-    return Object.entries(months)
-      .sort(([a], [b]) => b.localeCompare(a))
-      .slice(0, 6);
-  };
 
-  // 计算标签统计
-  const getTagStats = () => {
-    const tagCounts = {};
-    
-    allNotes.forEach(note => {
-      note.tags.forEach(tag => {
-        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-      });
+    // 按类型统计
+    const typeStats = {};
+    state.notes.forEach(note => {
+      const type = note.type || '其他';
+      typeStats[type] = (typeStats[type] || 0) + 1;
     });
-    
-    return Object.entries(tagCounts)
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 10);
-  };
 
-  const monthlyStats = getMonthlyStats();
-  const tagStats = getTagStats();
+    return {
+      total,
+      completed,
+      reading,
+      paused,
+      totalPages,
+      readPages,
+      avgRating,
+      completionRate,
+      readingProgress,
+      monthlyStats,
+      typeStats
+    };
+  }, [state.notes]);
+
+  const StatCard = ({ title, value, subtitle, color, icon }) => (
+    <div style={{
+      background: theme.colors.white,
+      padding: '24px',
+      borderRadius: '12px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+      border: `1px solid ${theme.colors.border}`,
+      textAlign: 'center'
+    }}>
+      <div style={{ fontSize: '32px', marginBottom: '8px' }}>{icon}</div>
+      <div style={{
+        fontSize: '28px',
+        fontWeight: 'bold',
+        color: color || theme.colors.primary,
+        marginBottom: '4px'
+      }}>
+        {value}
+      </div>
+      <div style={{
+        fontSize: '16px',
+        fontWeight: '600',
+        color: theme.colors.text,
+        marginBottom: '4px'
+      }}>
+        {title}
+      </div>
+      {subtitle && (
+        <div style={{
+          fontSize: '14px',
+          color: theme.colors.textSecondary
+        }}>
+          {subtitle}
+        </div>
+      )}
+    </div>
+  );
+
+  const ProgressBar = ({ value, max, label, color }) => (
+    <div style={{ marginBottom: '16px' }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '8px'
+      }}>
+        <span style={{
+          fontSize: '14px',
+          fontWeight: '600',
+          color: theme.colors.text
+        }}>
+          {label}
+        </span>
+        <span style={{
+          fontSize: '14px',
+          color: theme.colors.textSecondary
+        }}>
+          {value}%
+        </span>
+      </div>
+      <div style={{
+        width: '100%',
+        height: '8px',
+        backgroundColor: theme.colors.border,
+        borderRadius: '4px',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          width: `${value}%`,
+          height: '100%',
+          backgroundColor: color || theme.colors.primary,
+          borderRadius: '4px',
+          transition: 'width 0.3s ease'
+        }} />
+      </div>
+    </div>
+  );
 
   return (
-    <div
-      style={{
-        background: theme.colors.background.main,
-        minHeight: '100vh',
-        fontFamily: theme.fonts.sans,
-        padding: theme.spacing[8],
-      }}
-    >
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      <Sidebar />
+      
+      <main style={{
+        flex: 1,
+        marginLeft: '250px',
+        padding: '20px',
+        backgroundColor: theme.colors.background,
+        minHeight: '100vh'
+      }}>
         {/* 头部 */}
-        <div style={{ marginBottom: theme.spacing[8] }}>
-          <h1
-            style={{
-              fontWeight: 700,
-              fontSize: theme.fontSize['3xl'],
-              color: theme.colors.text.primary,
-              margin: 0,
-              marginBottom: theme.spacing[2],
-            }}
-          >
+        <div style={{
+          marginBottom: '30px',
+          paddingBottom: '20px',
+          borderBottom: `1px solid ${theme.colors.border}`
+        }}>
+          <h1 style={{
+            fontSize: '28px',
+            fontWeight: 'bold',
+            color: theme.colors.text,
+            margin: '0 0 8px 0'
+          }}>
             阅读统计
           </h1>
-          <p
-            style={{
-              fontSize: theme.fontSize.lg,
-              color: theme.colors.text.secondary,
-              margin: 0,
-            }}
-          >
+          <p style={{
+            fontSize: '16px',
+            color: theme.colors.textSecondary,
+            margin: 0
+          }}>
             了解你的阅读习惯和进度
           </p>
         </div>
 
-        {/* 概览卡片 */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: theme.spacing[6],
-            marginBottom: theme.spacing[8],
-          }}
-        >
-          <div
-            style={{
-              background: theme.colors.background.card,
-              padding: theme.spacing[6],
-              borderRadius: theme.borderRadius.xl,
-              boxShadow: theme.shadows.md,
-              border: `1px solid ${theme.colors.secondary[100]}`,
-              textAlign: 'center',
-            }}
-          >
-            <div
-              style={{
-                fontSize: theme.fontSize['4xl'],
-                fontWeight: 700,
-                color: theme.colors.primary[600],
-                marginBottom: theme.spacing[2],
-              }}
-            >
-              {stats.total}
-            </div>
-            <div
-              style={{
-                fontSize: theme.fontSize.lg,
-                color: theme.colors.text.primary,
-                fontWeight: 600,
-                marginBottom: theme.spacing[1],
-              }}
-            >
-              总笔记数
-            </div>
-            <div
-              style={{
-                fontSize: theme.fontSize.sm,
-                color: theme.colors.text.secondary,
-              }}
-            >
-              累计记录的知识
-            </div>
-          </div>
-
-          <div
-            style={{
-              background: theme.colors.background.card,
-              padding: theme.spacing[6],
-              borderRadius: theme.borderRadius.xl,
-              boxShadow: theme.shadows.md,
-              border: `1px solid ${theme.colors.secondary[100]}`,
-              textAlign: 'center',
-            }}
-          >
-            <div
-              style={{
-                fontSize: theme.fontSize['4xl'],
-                fontWeight: 700,
-                color: theme.colors.status.success,
-                marginBottom: theme.spacing[2],
-              }}
-            >
-              {stats.completed}
-            </div>
-            <div
-              style={{
-                fontSize: theme.fontSize.lg,
-                color: theme.colors.text.primary,
-                fontWeight: 600,
-                marginBottom: theme.spacing[1],
-              }}
-            >
-              已完成
-            </div>
-            <div
-              style={{
-                fontSize: theme.fontSize.sm,
-                color: theme.colors.text.secondary,
-              }}
-            >
-              完成率 {stats.completionRate}%
-            </div>
-          </div>
-
-          <div
-            style={{
-              background: theme.colors.background.card,
-              padding: theme.spacing[6],
-              borderRadius: theme.borderRadius.xl,
-              boxShadow: theme.shadows.md,
-              border: `1px solid ${theme.colors.secondary[100]}`,
-              textAlign: 'center',
-            }}
-          >
-            <div
-              style={{
-                fontSize: theme.fontSize['4xl'],
-                fontWeight: 700,
-                color: theme.colors.status.info,
-                marginBottom: theme.spacing[2],
-              }}
-            >
-              {stats.ongoing}
-            </div>
-            <div
-              style={{
-                fontSize: theme.fontSize.lg,
-                color: theme.colors.text.primary,
-                fontWeight: 600,
-                marginBottom: theme.spacing[1],
-              }}
-            >
-              进行中
-            </div>
-            <div
-              style={{
-                fontSize: theme.fontSize.sm,
-                color: theme.colors.text.secondary,
-              }}
-            >
-              正在学习的内容
-            </div>
-          </div>
-
-          <div
-            style={{
-              background: theme.colors.background.card,
-              padding: theme.spacing[6],
-              borderRadius: theme.borderRadius.xl,
-              boxShadow: theme.shadows.md,
-              border: `1px solid ${theme.colors.secondary[100]}`,
-              textAlign: 'center',
-            }}
-          >
-            <div
-              style={{
-                fontSize: theme.fontSize['4xl'],
-                fontWeight: 700,
-                color: theme.colors.status.warning,
-                marginBottom: theme.spacing[2],
-              }}
-            >
-              {stats.drafts}
-            </div>
-            <div
-              style={{
-                fontSize: theme.fontSize.lg,
-                color: theme.colors.text.primary,
-                fontWeight: 600,
-                marginBottom: theme.spacing[1],
-              }}
-            >
-              草稿
-            </div>
-            <div
-              style={{
-                fontSize: theme.fontSize.sm,
-                color: theme.colors.text.secondary,
-              }}
-            >
-              待完善的想法
-            </div>
-          </div>
+        {/* 主要统计卡片 */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '20px',
+          marginBottom: '30px'
+        }}>
+          <StatCard
+            title="总笔记数"
+            value={stats.total}
+            subtitle="篇笔记"
+            color={theme.colors.primary}
+            icon="📚"
+          />
+          <StatCard
+            title="已完成"
+            value={stats.completed}
+            subtitle={`${stats.completionRate}% 完成率`}
+            color="#10B981"
+            icon="✅"
+          />
+          <StatCard
+            title="阅读中"
+            value={stats.reading}
+            subtitle="进行中"
+            color="#3B82F6"
+            icon="📖"
+          />
+          <StatCard
+            title="平均评分"
+            value={stats.avgRating}
+            subtitle="⭐ 分"
+            color="#F59E0B"
+            icon="⭐"
+          />
         </div>
 
-        {/* 笔记类型分布 */}
-        <div
-          style={{
-            background: theme.colors.background.card,
-            padding: theme.spacing[6],
-            borderRadius: theme.borderRadius.xl,
-            boxShadow: theme.shadows.md,
-            border: `1px solid ${theme.colors.secondary[100]}`,
-            marginBottom: theme.spacing[8],
-          }}
-        >
-          <h2
-            style={{
-              fontSize: theme.fontSize.xl,
-              fontWeight: 700,
-              color: theme.colors.text.primary,
-              margin: 0,
-              marginBottom: theme.spacing[6],
-            }}
-          >
-            笔记类型分布
-          </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: theme.spacing[4],
-            }}
-          >
-            {Object.entries(noteTypes).map(([key, type]) => (
-              <div
-                key={key}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: theme.spacing[4],
-                  background: `${type.color}20`,
-                  borderRadius: theme.borderRadius.lg,
-                  border: `1px solid ${type.color}40`,
-                }}
-              >
-                <div
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: '50%',
-                    background: type.color,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '24px',
-                    marginRight: theme.spacing[3],
-                  }}
-                >
-                  {type.icon}
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontSize: theme.fontSize.lg,
-                      fontWeight: 600,
-                      color: theme.colors.text.primary,
-                      marginBottom: theme.spacing[1],
-                    }}
-                  >
-                    {type.name}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: theme.fontSize['2xl'],
-                      fontWeight: 700,
-                      color: theme.colors.text.primary,
-                    }}
-                  >
-                    {stats.typeStats[key] || 0}
-                  </div>
-                </div>
-              </div>
-            ))}
+        {/* 进度统计 */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '20px',
+          marginBottom: '30px'
+        }}>
+          <div style={{
+            background: theme.colors.white,
+            padding: '24px',
+            borderRadius: '12px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            border: `1px solid ${theme.colors.border}`
+          }}>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: 'bold',
+              color: theme.colors.text,
+              margin: '0 0 20px 0'
+            }}>
+              阅读进度
+            </h3>
+            <ProgressBar
+              value={stats.completionRate}
+              label="笔记完成率"
+              color="#10B981"
+            />
+            <ProgressBar
+              value={stats.readingProgress}
+              label="页面阅读进度"
+              color="#3B82F6"
+            />
           </div>
-        </div>
 
-        {/* 月度趋势 */}
-        <div
-          style={{
-            background: theme.colors.background.card,
-            padding: theme.spacing[6],
-            borderRadius: theme.borderRadius.xl,
-            boxShadow: theme.shadows.md,
-            border: `1px solid ${theme.colors.secondary[100]}`,
-            marginBottom: theme.spacing[8],
-          }}
-        >
-          <h2
-            style={{
-              fontSize: theme.fontSize.xl,
-              fontWeight: 700,
-              color: theme.colors.text.primary,
-              margin: 0,
-              marginBottom: theme.spacing[6],
-            }}
-          >
-            月度趋势
-          </h2>
-          <div style={{ overflowX: 'auto' }}>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(6, 1fr)',
-                gap: theme.spacing[4],
-                minWidth: 600,
-              }}
-            >
-              {monthlyStats.map(([month, data]) => (
-                <div
-                  key={month}
-                  style={{
-                    textAlign: 'center',
-                    padding: theme.spacing[4],
-                    background: theme.colors.primary[50],
-                    borderRadius: theme.borderRadius.lg,
-                    border: `1px solid ${theme.colors.primary[100]}`,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: theme.fontSize.sm,
-                      color: theme.colors.text.secondary,
-                      marginBottom: theme.spacing[2],
-                    }}
-                  >
-                    {month}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: theme.fontSize['2xl'],
-                      fontWeight: 700,
-                      color: theme.colors.text.primary,
-                      marginBottom: theme.spacing[1],
-                    }}
-                  >
-                    {data.total}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: theme.fontSize.xs,
-                      color: theme.colors.text.muted,
-                    }}
-                  >
-                    完成: {data.completed}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* 热门标签 */}
-        <div
-          style={{
-            background: theme.colors.background.card,
-            padding: theme.spacing[6],
-            borderRadius: theme.borderRadius.xl,
-            boxShadow: theme.shadows.md,
-            border: `1px solid ${theme.colors.secondary[100]}`,
-          }}
-        >
-          <h2
-            style={{
-              fontSize: theme.fontSize.xl,
-              fontWeight: 700,
-              color: theme.colors.text.primary,
-              margin: 0,
-              marginBottom: theme.spacing[6],
-            }}
-          >
-            热门标签
-          </h2>
-          <div
-            style={{
+          <div style={{
+            background: theme.colors.white,
+            padding: '24px',
+            borderRadius: '12px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            border: `1px solid ${theme.colors.border}`
+          }}>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: 'bold',
+              color: theme.colors.text,
+              margin: '0 0 20px 0'
+            }}>
+              页面统计
+            </h3>
+            <div style={{
               display: 'flex',
-              flexWrap: 'wrap',
-              gap: theme.spacing[3],
-            }}
-          >
-            {tagStats.map(([tag, count]) => (
-              <div
-                key={tag}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: `${theme.spacing[2]} ${theme.spacing[3]}`,
-                  background: theme.colors.primary[100],
-                  color: theme.colors.primary[700],
-                  borderRadius: theme.borderRadius.lg,
-                  fontSize: theme.fontSize.sm,
-                  fontWeight: 600,
-                }}
-              >
-                <span style={{ marginRight: theme.spacing[2] }}>🏷️</span>
-                {tag}
-                <span
-                  style={{
-                    marginLeft: theme.spacing[2],
-                    background: theme.colors.primary[200],
-                    color: theme.colors.primary[800],
-                    padding: `${theme.spacing[1]} ${theme.spacing[2]}`,
-                    borderRadius: theme.borderRadius.sm,
-                    fontSize: theme.fontSize.xs,
-                    fontWeight: 700,
-                  }}
-                >
-                  {count}
-                </span>
-              </div>
-            ))}
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '16px'
+            }}>
+              <span style={{ fontSize: '14px', color: theme.colors.textSecondary }}>
+                已读页面
+              </span>
+              <span style={{ fontSize: '16px', fontWeight: 'bold', color: theme.colors.primary }}>
+                {stats.readPages}
+              </span>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '16px'
+            }}>
+              <span style={{ fontSize: '14px', color: theme.colors.textSecondary }}>
+                总页面
+              </span>
+              <span style={{ fontSize: '16px', fontWeight: 'bold', color: theme.colors.text }}>
+                {stats.totalPages}
+              </span>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <span style={{ fontSize: '14px', color: theme.colors.textSecondary }}>
+                剩余页面
+              </span>
+              <span style={{ fontSize: '16px', fontWeight: 'bold', color: theme.colors.textSecondary }}>
+                {stats.totalPages - stats.readPages}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+
+        {/* 详细统计 */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+          gap: '20px'
+        }}>
+          {/* 月度统计 */}
+          <div style={{
+            background: theme.colors.white,
+            padding: '24px',
+            borderRadius: '12px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            border: `1px solid ${theme.colors.border}`
+          }}>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: 'bold',
+              color: theme.colors.text,
+              margin: '0 0 20px 0'
+            }}>
+              月度笔记统计
+            </h3>
+            {Object.keys(stats.monthlyStats).length === 0 ? (
+              <p style={{ color: theme.colors.textSecondary, textAlign: 'center' }}>
+                暂无数据
+              </p>
+            ) : (
+              <div>
+                {Object.entries(stats.monthlyStats).map(([month, count]) => (
+                  <div key={month} style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px 0',
+                    borderBottom: `1px solid ${theme.colors.border}`
+                  }}>
+                    <span style={{ fontSize: '14px', color: theme.colors.text }}>
+                      {month}
+                    </span>
+                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: theme.colors.primary }}>
+                      {count} 篇
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 类型统计 */}
+          <div style={{
+            background: theme.colors.white,
+            padding: '24px',
+            borderRadius: '12px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            border: `1px solid ${theme.colors.border}`
+          }}>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: 'bold',
+              color: theme.colors.text,
+              margin: '0 0 20px 0'
+            }}>
+              笔记类型分布
+            </h3>
+            {Object.keys(stats.typeStats).length === 0 ? (
+              <p style={{ color: theme.colors.textSecondary, textAlign: 'center' }}>
+                暂无数据
+              </p>
+            ) : (
+              <div>
+                {Object.entries(stats.typeStats).map(([type, count]) => (
+                  <div key={type} style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px 0',
+                    borderBottom: `1px solid ${theme.colors.border}`
+                  }}>
+                    <span style={{ fontSize: '14px', color: theme.colors.text }}>
+                      {type}
+                    </span>
+                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: theme.colors.primary }}>
+                      {count} 篇
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
