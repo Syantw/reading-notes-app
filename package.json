@@ -20,10 +20,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+    "lint": "eslint . --ext .jsx,.js --fix",
+    "lint:check": "eslint . --ext .jsx,.js",
     "format": "prettier --write src/",
-    "lint-check": "eslint src --ext .js,.jsx,.ts,.tsx",
-    "format-check": "prettier --check src/"
+    "format:check": "prettier --check src/"
   },
   "eslintConfig": {
     "extends": [
@@ -44,8 +44,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.27.5",
-    "@babel/preset-react": "^7.27.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-react": "^7.37.5",
