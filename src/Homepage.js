@@ -107,7 +107,7 @@ function Sidebar({ onCreateNote }) {
               Folders
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {folders.map(f => (
+              {folders.map((f) => (
                 <span
                   key={f.abbr}
                   style={{
@@ -349,7 +349,7 @@ function RecentFolders() {
         </div>
       </div>
       <div style={{ display: 'flex', gap: 32 }}>
-        {folders.slice(0, 5).map(folder => (
+        {folders.slice(0, 5).map((folder) => (
           <div
             key={folder.abbr}
             style={{
@@ -423,7 +423,7 @@ function Homepage() {
       items: [
         'Success is a journey, not a destination.',
         'Try a new recipe this weekend',
-        "Don't forget to water the plants",
+        'Don\'t forget to water the plants',
       ],
     },
     {
@@ -456,11 +456,11 @@ function Homepage() {
   });
 
   const handleCreateNote = () => setShowForm(true);
-  const handleFormChange = e => {
+  const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
-  const handleFormSubmit = e => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     if (!form.title || !form.items) return;
     setNotes([
@@ -487,7 +487,7 @@ function Homepage() {
         background: mainBg,
         minHeight: '100vh',
         fontFamily:
-          "'Inter', 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+          '\'Inter\', \'Helvetica Neue\', Arial, \'PingFang SC\', \'Hiragino Sans GB\', \'Microsoft YaHei\', sans-serif',
       }}
     >
       <Sidebar onCreateNote={handleCreateNote} />
