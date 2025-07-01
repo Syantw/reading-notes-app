@@ -1,10 +1,10 @@
 import React from "react";
 
-function Sidebar({ onCreateNote, theme }) {
+function Sidebar({ onCreateNote, theme, onToggleTheme }) {
   const sidebarBg = theme === "dark" ? "#1a1a1a" : "#fff";
   const sidebarBorder = theme === "dark" ? "#333" : "#f0f0f0";
   const textColor = theme === "dark" ? "#fff" : "#222";
-  const secondaryTextColor = theme === "dark" ? "#999" : "#888";
+  const secondaryTextColor = theme === "dark" ? "#ccc" : "#888";
 
   const folders = [
     { abbr: "O", name: "Ongoing" },
@@ -88,7 +88,10 @@ function Sidebar({ onCreateNote, theme }) {
               marginBottom: 32,
             }}
           >
-            <span style={{ color: textColor, fontWeight: 500, cursor: "pointer" }}>
+            <span 
+              style={{ color: textColor, fontWeight: 500, cursor: "pointer" }}
+              // onClick={} // 等待 Cursor 建议补全
+            >
               🔍 Search
             </span>
             <span style={{ color: textColor, fontWeight: 500, cursor: "pointer" }}>

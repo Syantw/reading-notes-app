@@ -7,6 +7,9 @@ const noteColors = ["#e6e6fa", "#ffe4c4", "#e6ffe6", "#fff9e6"];
 
 function App() {
   const [theme, setTheme] = useState("light");
+  const toggleTheme = () => {
+    setTheme(prev => prev === "dark" ? "light" : "dark");
+  };
   const [notes, setNotes] = useState([
     {
       title: "Reading List",
@@ -57,10 +60,6 @@ function App() {
     color: noteColors[0],
     items: "",
   });
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === "light" ? "dark" : "light");
-  };
 
   const handleCreateNote = () => setShowForm(true);
   
