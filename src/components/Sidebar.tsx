@@ -1,10 +1,15 @@
 import React from "react";
 
-function Sidebar({ onCreateNote, theme, onToggleTheme }) {
+interface SidebarProps {
+  onCreateNote: () => void;
+  theme: 'light' | 'dark';
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onCreateNote, theme }) => {
   const sidebarBg = theme === "dark" ? "#1a1a1a" : "#fff";
   const sidebarBorder = theme === "dark" ? "#333" : "#f0f0f0";
   const textColor = theme === "dark" ? "#fff" : "#222";
-  const secondaryTextColor = theme === "dark" ? "#ccc" : "#888";
+  const secondaryTextColor = theme === "dark" ? "#999" : "#888";
 
   const folders = [
     { abbr: "O", name: "Ongoing" },
@@ -88,10 +93,7 @@ function Sidebar({ onCreateNote, theme, onToggleTheme }) {
               marginBottom: 32,
             }}
           >
-            <span 
-              style={{ color: textColor, fontWeight: 500, cursor: "pointer" }}
-              // onClick={} // 等待 Cursor 建议补全
-            >
+            <span style={{ color: textColor, fontWeight: 500, cursor: "pointer" }}>
               🔍 Search
             </span>
             <span style={{ color: textColor, fontWeight: 500, cursor: "pointer" }}>
@@ -110,9 +112,9 @@ function Sidebar({ onCreateNote, theme, onToggleTheme }) {
               Folders
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {folders.map((f) => (
+              {folders.map((f, index) => (
                 <span
-                  key={f.abbr}
+                  key={index}
                   style={{
                     color: textColor,
                     fontWeight: 500,
@@ -151,6 +153,6 @@ function Sidebar({ onCreateNote, theme, onToggleTheme }) {
       </div>
     </aside>
   );
-}
+};
 
 export default Sidebar; 

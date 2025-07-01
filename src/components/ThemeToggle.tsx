@@ -1,6 +1,11 @@
 import React from "react";
 
-function ThemeToggle({ theme, onToggle }) {
+interface ThemeToggleProps {
+  theme: 'light' | 'dark';
+  onToggle: () => void;
+}
+
+const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, onToggle }) => {
   return (
     <button
       onClick={onToggle}
@@ -26,16 +31,16 @@ function ThemeToggle({ theme, onToggle }) {
         justifyContent: "center",
       }}
       onMouseEnter={(e) => {
-        e.target.style.transform = "scale(1.1)";
+        e.currentTarget.style.transform = "scale(1.1)";
       }}
       onMouseLeave={(e) => {
-        e.target.style.transform = "scale(1)";
+        e.currentTarget.style.transform = "scale(1)";
       }}
       title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
     >
       {theme === "dark" ? "☀️" : "🌙"}
     </button>
   );
-}
+};
 
 export default ThemeToggle; 

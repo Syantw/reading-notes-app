@@ -11,14 +11,14 @@ export const themes = {
       noteColors: ["#e6e6fa", "#ffe4c4", "#e6ffe6", "#fff9e6"],
     }
   },
-  dark: {
-    name: "dark",
+  green: {
+    name: "green",
     colors: {
-      background: "#121212",
-      cardBackground: "#1a1a1a",
+      background: "#000000",
+      cardBackground: "#000000",
       text: "#fff",
-      secondaryText: "#ccc",
-      border: "#333",
+      secondaryText: "#000000",
+      border: "#000000",
       shadow: "0 2px 8px rgba(255,255,255,0.08)",
       noteColors: ["#4a4a6a", "#6b5b4a", "#4a6b4a", "#6b6b4a"],
     }

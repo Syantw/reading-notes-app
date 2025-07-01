@@ -1,92 +1,82 @@
 import React, { useState } from "react";
+import { Note, CreateNoteData, NoteColor } from "./types/Note";
+import { createNote } from "./utils/noteHelpers";
+import NoteCard from "./components/NoteCard";
 import Sidebar from "./components/Sidebar";
-import NoteList from "./components/NoteList";
 import ThemeToggle from "./components/ThemeToggle";
 
-const noteColors = ["#e6e6fa", "#ffe4c4", "#e6ffe6", "#fff9e6"];
+type Theme = 'light' | 'dark';
 
-function App() {
-  const [theme, setTheme] = useState("light");
-  const toggleTheme = () => {
-    setTheme(prev => prev === "dark" ? "light" : "dark");
-  };
-  const [notes, setNotes] = useState([
+const App: React.FC = () => {
+  const [theme, setTheme] = useState<Theme>("light");
+  const [notes, setNotes] = useState<Note[]>([
     {
+      id: "1",
       title: "Reading List",
-      time: "Today",
-      color: noteColors[0],
-      items: [
-        "Atomic Habits - Chapter 3",
-        "The Psychology of Programming",
-        "Clean Code principles",
-      ],
+      content: "Atomic Habits - Chapter 3, The Psychology of Programming, Clean Code principles",
+      color: NoteColor.Purple,
+      createdAt: new Date("2024-01-15"),
     },
     {
+      id: "2", 
       title: "Learning Goals",
-      time: "This Week",
-      color: noteColors[1],
-      items: [
-        "React hooks deep dive",
-        "TypeScript fundamentals",
-        "Design patterns",
-      ],
+      content: "React hooks deep dive, TypeScript fundamentals, Design patterns",
+      color: NoteColor.Beige,
+      createdAt: new Date("2024-01-16"),
     },
     {
-      title: "Project Ideas",
-      time: "Next Month",
-      color: noteColors[2],
-      items: [
-        "Personal blog with MDX",
-        "Reading tracker app",
-        "Code snippet manager",
-      ],
+      id: "3",
+      title: "Project Ideas", 
+      content: "Personal blog with MDX, Reading tracker app, Code snippet manager",
+      color: NoteColor.Green,
+      createdAt: new Date("2024-01-17"),
     },
     {
+      id: "4",
       title: "Tech Articles",
-      time: "Saved",
-      color: noteColors[3],
-      items: [
-        "Modern CSS techniques",
-        "Performance optimization",
-        "Web accessibility guide",
-      ],
+      content: "Modern CSS techniques, Performance optimization, Web accessibility guide",
+      color: NoteColor.Yellow,
+      createdAt: new Date("2024-01-18"),
     },
   ]);
   
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<CreateNoteData>({
     title: "",
-    time: "",
-    color: noteColors[0],
-    items: "",
+    content: "",
+    color: NoteColor.Purple,
   });
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "light" ? "dark" : "light");
+  };
 
   const handleCreateNote = () => setShowForm(true);
   
-  const handleFormChange = (e) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
   
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.title || !form.items) return;
-    setNotes([
-      ...notes,
-      {
-        title: form.title,
-        time: form.time,
-        color: form.color,
-        items: form.items.split("\n").filter(Boolean),
-      },
-    ]);
-    setForm({ title: "", time: "", color: noteColors[0], items: "" });
+    if (!form.title || !form.content) return;
+    
+    const newNote = createNote(form);
+    setNotes(prev => [...prev, newNote]);
+    
+    setForm({ title: "", content: "", color: NoteColor.Purple });
     setShowForm(false);
   };
   
   const handleFormCancel = () => {
     setShowForm(false);
-    setForm({ title: "", time: "", color: noteColors[0], items: "" });
+    setForm({ title: "", content: "", color: NoteColor.Purple });
+  };
+
+  const handleEditNote = (note: Note) => {
+    console.log("Edit note:", note.title);
+    // 这里可以添加编辑功能
   };
 
   const mainBg = theme === "dark" ? "#121212" : "#f7f8fa";
@@ -165,18 +155,20 @@ function App() {
                 }}
                 required
               />
-              <input
-                name="time"
-                placeholder="Time (optional)"
-                value={form.time}
+              <textarea
+                name="content"
+                placeholder="Content"
+                value={form.content}
                 onChange={handleFormChange}
                 style={{ 
                   padding: 8, 
                   borderRadius: 8, 
                   border: `1px solid ${theme === "dark" ? "#333" : "#eee"}`,
+                  minHeight: 80,
                   background: theme === "dark" ? "#333" : "#fff",
                   color: theme === "dark" ? "#fff" : "#222"
                 }}
+                required
               />
               <select
                 name="color"
@@ -190,27 +182,12 @@ function App() {
                   color: theme === "dark" ? "#fff" : "#222"
                 }}
               >
-                {noteColors.map((c, i) => (
-                  <option value={c} key={i}>
-                    Color {i + 1}
+                {Object.entries(NoteColor).map(([name, color]) => (
+                  <option value={color} key={color}>
+                    {name}
                   </option>
                 ))}
               </select>
-              <textarea
-                name="items"
-                placeholder="One item per line"
-                value={form.items}
-                onChange={handleFormChange}
-                style={{ 
-                  padding: 8, 
-                  borderRadius: 8, 
-                  border: `1px solid ${theme === "dark" ? "#333" : "#eee"}`,
-                  minHeight: 80,
-                  background: theme === "dark" ? "#333" : "#fff",
-                  color: theme === "dark" ? "#fff" : "#222"
-                }}
-                required
-              />
               <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
                 <button 
                   type="button" 
@@ -245,10 +222,35 @@ function App() {
             </form>
           </div>
         )}
-        <NoteList notes={notes} theme={theme} />
+        
+        <div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: 24,
+              marginTop: 8,
+            }}
+          >
+            <h2 style={{ fontWeight: 700, fontSize: 24, color: theme === "dark" ? "#fff" : "#222", flex: 1 }}>
+              My Notes
+            </h2>
+          </div>
+          
+          <div style={{ display: "flex", gap: 24, marginBottom: 32, flexWrap: "wrap" }}>
+            {notes.map((note) => (
+              <NoteCard 
+                key={note.id} 
+                note={note} 
+                theme={theme}
+                onEdit={handleEditNote}
+              />
+            ))}
+          </div>
+        </div>
       </main>
     </div>
   );
-}
+};
 
 export default App;
