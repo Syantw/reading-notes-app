@@ -38,7 +38,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, onToggle }) => {
       }}
       title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
     >
-      {theme === "dark" ? "☀️" : "🌙"}
+      {theme === "dark" ? "🌙" : "☀️"}
     </button>
   );
 };

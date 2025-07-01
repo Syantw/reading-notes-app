@@ -4,11 +4,35 @@ export interface Note {
   content: string;
   createdAt: Date;
   color: string;
-  // 为了演示跨文件功能，这个 tags 字段我们稍后会添加
+  // 新增字段 - 这些将在演示中逐步添加
+  // category: NoteCategory;
+  // priority: NotePriority;
+  // status: NoteStatus;
   // tags: Tag[];
 }
 
-// 标签接口 - 稍后在演示中会添加
+// 这些枚举将在演示中逐步添加
+// export enum NoteCategory {
+//   WORK = 'work',
+//   PERSONAL = 'personal',
+//   LEARNING = 'learning',
+//   PROJECT = 'project'
+// }
+
+// export enum NotePriority {
+//   LOW = 'low',
+//   MEDIUM = 'medium',
+//   HIGH = 'high',
+//   URGENT = 'urgent'
+// }
+
+// export enum NoteStatus {
+//   TODO = 'todo',
+//   IN_PROGRESS = 'in_progress',
+//   DONE = 'done',
+//   ARCHIVED = 'archived'
+// }
+
 // export interface Tag {
 //   id: string;
 //   name: string;
